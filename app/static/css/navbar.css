@@ -1,0 +1,17 @@
+.navbar { display: flex; align-items: center; justify-content: space-between;
+  background: #0c2340; padding: 1rem 2rem;
+}
+.brand { color: #ffc107; font-size: 1.8rem; font-weight: bold; }
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a { color: #fff; font-weight: 500; }
+.nav-auth .btn { margin-left: 1rem; }
+.signup { background: transparent; border: 1px solid #ffc107; color: #ffc107; }
+.login { background: #ffc107; color: #0c2340; }
+.profile-menu { position: relative; cursor: pointer; }
+.profile-menu .icon { font-size: 1.2rem; }
+.profile-menu .dropdown { display: none; position: absolute; top: 120%; right: 0;
+  background: #fff; color: #0c2340; border-radius: 4px; overflow: hidden;
+}
+.profile-menu:hover .dropdown { display: block; }
+.profile-menu .dropdown li { padding: 0.5rem 1rem; white-space: nowrap; }
+.profile-menu .dropdown li a { color: #0c2340; }

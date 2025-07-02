@@ -1,0 +1,31 @@
+.hero {
+  position: relative;
+  /* Fill remaining space between navbar & footer */
+  min-height: calc(100vh - 120px);
+  background: url('/static/images/hero.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.hero-content {
+  position: relative;
+  text-align: center;
+  color: #fff;
+}
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.hero-content .btn.cta {
+  background: #ff7f00;
+  color: #fff;
+}
