@@ -1,0 +1,77 @@
+/* VERIFY OTP - Cybersecurity Themed Styles */
+
+.otp-verification {
+  background: linear-gradient(145deg, #0c0c0c, #1a1a1a);
+  color: #e6faff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 440px;
+  margin: 70px auto;
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.15);
+  font-family: 'Share Tech Mono', monospace;
+  position: relative;
+}
+
+.otp-verification h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  color: #00ffff;
+}
+
+.otp-verification .instruction {
+  font-size: 0.95rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #b0dfe0;
+}
+
+.otp-verification .input-group {
+  margin-bottom: 1.2rem;
+}
+
+.otp-verification input[type="email"],
+.otp-verification input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  background: #111;
+  border: 1px solid #00cccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #fff;
+  outline: none;
+}
+
+.otp-verification input:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 5px #00ffff88;
+}
+
+.otp-verification .verify-btn {
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+  background: #00ffff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.otp-verification .verify-btn:hover {
+  background: #00dddd;
+}
+
+.otp-verification .resend-note {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.otp-verification .resend-link {
+  color: #00ffff;
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -1,0 +1,161 @@
+<!-- app/templates/components/navbar.html -->
+<nav class="navbar">
+  <style>
+    /* Navbar container */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #0d1117;
+      padding: 8px 20px;
+      font-family: 'Share Tech Mono', monospace;
+      color: #fff;
+      border-bottom: 2px solid #00ffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 50px;
+    }
+
+    /* Brand/logo */
+    .navbar .brand {
+      font-size: 1.5rem;
+      color: #00ffff;
+      text-decoration: none;
+    }
+
+    /* Navigation links */
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .nav-links a:hover {
+      color: #00ffff;
+    }
+
+    /* Auth and profile */
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-auth .btn {
+      border: 1px solid #00ffff;
+      color: #00ffff;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .nav-auth .btn:hover {
+      background: #00ffff;
+      color: #000;
+    }
+
+    /* Profile menu container */
+    .profile-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Icon styling */
+    .profile-menu .icon {
+      font-size: 20px;
+      padding: 6px 10px;
+      background: #1f2937;
+      border: 1px solid #00ffff;
+      border-radius: 6px;
+      color: #00ffff;
+      cursor: pointer;
+    }
+
+    /* Dropdown menu, hidden by default */
+    .profile-menu .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      background: #161b22;
+      border: 1px solid #00ffff;
+      border-radius: 6px;
+      min-width: 140px;
+      padding: 8px 0;
+      z-index: 999;
+    }
+
+    /* Show when active class is present */
+    .profile-menu.active .dropdown {
+      display: block;
+    }
+
+    /* Dropdown items */
+    .profile-menu .dropdown li {
+      list-style: none;
+    }
+    .profile-menu .dropdown a {
+      display: block;
+      padding: 8px 16px;
+      color: #ccc;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .profile-menu .dropdown a:hover {
+      background: #00ffff;
+      color: #000;
+    }
+  </style>
+
+  <!-- Brand -->
+  <a class="brand" href="/">CIPHERSTORM</a>
+
+  <!-- Main links -->
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/features">Features</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+
+  <!-- Auth / Profile -->
+  <div class="nav-auth">
+    {% if user %}
+      <div class="profile-menu" id="profileMenu">
+        <span class="icon">👤</span>
+        <ul class="dropdown">
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/settings">Settings</a></li>
+          <li><a href="/auth/logout">Logout</a></li>
+        </ul>
+      </div>
+    {% else %}
+      <a href="/auth/signup" class="btn signup">Sign Up</a>
+      <a href="/auth/login" class="btn login">Login</a>
+    {% endif %}
+  </div>
+
+  <!-- Toggle Dropdown via JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const profileMenu = document.getElementById('profileMenu');
+      if (profileMenu) {
+        profileMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          this.classList.toggle('active');
+        });
+        document.addEventListener('click', function(e) {
+          if (!profileMenu.contains(e.target)) {
+            profileMenu.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+</nav>

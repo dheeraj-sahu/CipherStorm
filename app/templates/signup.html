@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-heading">🛡️ Create Account</h2>
+
+    {% if error %}
+      <div class="auth-error">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="/auth/signup" class="auth-form">
+      <input
+        type="text"
+        name="username"
+        placeholder="👤 Username"
+        required
+        class="auth-input"
+      >
+      <input
+        type="email"
+        name="email"
+        placeholder="📧 Email"
+        required
+        class="auth-input"
+      >
+      <input
+        type="password"
+        name="password"
+        placeholder="🔒 Password"
+        required
+        class="auth-input"
+      >
+
+      <button type="submit" class="auth-button">Sign Up</button>
+    </form>
+
+    <p class="auth-link">
+      Already have an account? <a href="/auth/login">Login here</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

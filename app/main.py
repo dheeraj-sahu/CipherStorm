@@ -1,41 +1,16 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from app.database import Base, engine
+from app.routers import auth, user, profile, pages
 
-app = FastAPI()
+app = FastAPI(title="Fraud Detection API")
+
+# Mount static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
 
-def get_current_user(request: Request):
-    return request.cookies.get("user")
+Base.metadata.create_all(bind=engine)
 
-@app.get("/", response_class=HTMLResponse)
-async def landing(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "user": get_current_user(request)})
-
-@app.get("/features", response_class=HTMLResponse)
-async def features(request: Request):
-    return templates.TemplateResponse("features.html", {"request": request, "user": get_current_user(request)})
-
-@app.get("/contact", response_class=HTMLResponse)
-async def contact(request: Request):
-    return templates.TemplateResponse("contact.html", {"request": request, "user": get_current_user(request)})
-
-@app.get("/login")
-def login():
-    return {"message": "Login endpoint"}
-
-@app.get("/signup")
-def signup():
-    return {"message": "Signup endpoint"}
-
-@app.get("/dashboard")
-def dashboard():
-    return {"message": "Dashboard endpoint"}
-
-@app.get("/logout")
-def logout():
-    resp = HTMLResponse(content="<script>location.replace('/')</script>")
-    resp.delete_cookie("user")
-    return resp
+app.include_router(pages.router)
+app.include_router(auth.router)
+app.include_router(user.router)
+app.include_router(profile.router)

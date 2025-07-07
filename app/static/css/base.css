@@ -1,22 +1,16 @@
-/* Reset & Base */
-html, body {
-  height: 100%;
-}
 body {
-  display: flex;
-  flex-direction: column;
-  font-family: 'Segoe UI', sans-serif;
-  color: #fff;
-  background: #f0f2f5;
-}
-main {
-  flex: 1;
-}
-* {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  background-color: #0e0e0e;
+  color: #e0e0e0;
+  font-family: 'Share Tech Mono', monospace;
 }
-a { text-decoration: none; }
-ul { list-style: none; }
-.btn { padding: 0.6rem 1.2rem; border-radius: 4px; font-weight: 600; }
+
+a {
+  text-decoration: none;
+  color: #00ffcc;
+}
+
+a:hover {
+  color: #00ffaa;
+}

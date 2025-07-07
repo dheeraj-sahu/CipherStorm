@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="auth-container">
+  <form method="POST" action="/profile/create" class="auth-card">
+    <h2 class="auth-heading">Create Your Profile</h2>
+
+    <input type="text" name="full_name" placeholder="Full Name" class="auth-input" required />
+    <input type="text" name="mobile_no" placeholder="Mobile Number" class="auth-input" required />
+    <input type="text" name="upi_id" placeholder="UPI ID" class="auth-input" required />
+    <textarea name="address" rows="3" placeholder="Address (optional)" class="auth-input"></textarea>
+    <input type="number" name="transaction_limit" placeholder="Transaction Limit" class="auth-input" />
+
+    <button type="submit" class="auth-button">Submit</button>
+  </form>
+</div>
+{% endblock %}
