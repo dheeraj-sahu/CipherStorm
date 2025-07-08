@@ -10,6 +10,11 @@ venv/
 env/
 ENV/
 
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
