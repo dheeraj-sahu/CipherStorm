@@ -6,10 +6,7 @@
     <h2><i class="fas fa-shield-alt"></i> Verify Your Email</h2>
     <p class="instruction">We’ve sent an OTP to your registered email. Please enter it below to verify your account.</p>
 
-    <form method="POST" action="/auth/verify-otp">
-      <div class="input-group">
-        <input type="email" name="email" placeholder="Enter your email" required>
-      </div>
+    <form method="POST" action="/auth/verify-otp?email={{ email }}">
 
       <div class="input-group">
         <input type="text" name="otp" placeholder="Enter OTP" maxlength="6" required>

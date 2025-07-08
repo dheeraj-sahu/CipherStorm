@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Account - CipherStorm{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<section class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-heading">⚙️ Edit Account Information</h2>
+
+    {% if error %}
+      <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/edit/user" class="auth-form">
+      <input
+        type="text"
+        name="username"
+        placeholder="👤 Username"
+        required
+        class="auth-input"
+        value="{{ user.username }}"
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="📧 Email Address"
+        required
+        class="auth-input"
+        value="{{ user.email }}"
+      />
+
+      <h3 class="auth-subheading">🔒 Change Password (Optional)</h3>
+      <input
+        type="password"
+        name="current_password"
+        placeholder="Current Password"
+        class="auth-input"
+      />
+      <input
+        type="password"
+        name="new_password"
+        placeholder="New Password"
+        class="auth-input"
+      />
+      <input
+        type="password"
+        name="confirm_password"
+        placeholder="Confirm New Password"
+        class="auth-input"
+      />
+
+      <button type="submit" class="auth-button">Update Account</button>
+    </form>
+
+    <p class="auth-link"><a href="/profile/my_profile">Cancel</a></p>
+  </div>
+</section>
+
+<script>
+    // Password validation
+    document.getElementById('new_password').addEventListener('input', function() {
+        const newPassword = this.value;
+        const confirmPassword = document.getElementById('confirm_password');
+        
+        if (newPassword.length > 0 && newPassword.length < 6) {
+            this.setCustomValidity('Password must be at least 6 characters long');
+        } else {
+            this.setCustomValidity('');
+        }
+        
+        // Check if confirm password matches
+        if (confirmPassword.value && confirmPassword.value !== newPassword) {
+            confirmPassword.setCustomValidity('Passwords do not match');
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    });
+    
+    document.getElementById('confirm_password').addEventListener('input', function() {
+        const newPassword = document.getElementById('new_password').value;
+        
+        if (this.value !== newPassword) {
+            this.setCustomValidity('Passwords do not match');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+    
+    // Form validation to ensure current password is provided when changing password
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('new_password').value;
+        const currentPassword = document.getElementById('current_password').value;
+        
+        if (newPassword && !currentPassword) {
+            e.preventDefault();
+            alert('Please enter your current password to change your password');
+            document.getElementById('current_password').focus();
+        }
+    });
+</script>
+{% endblock %}

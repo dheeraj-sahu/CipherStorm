@@ -7,14 +7,15 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from sqlalchemy import func
 import logging
+from app.models.transaction import Transaction
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 # Load Static Models (global) with error handling
 try:
-    with open("ml_models/global_model.pkl", "rb") as f:
+    with open("app/ml_models/global_model.pkl", "rb") as f:
         global_model = pickle.load(f)
     logger.info("Global model loaded successfully")
 except FileNotFoundError:
@@ -22,7 +23,7 @@ except FileNotFoundError:
     global_model = None
 
 try:
-    with open("ml_models/global_label_encoders.pkl", "rb") as f:
+    with open("app/ml_models/global_label_encoders.pkl", "rb") as f:
         global_label_encoders = pickle.load(f)
     logger.info("Global label encoders loaded successfully")
 except FileNotFoundError:
@@ -30,7 +31,7 @@ except FileNotFoundError:
     global_label_encoders = {}
 
 try:
-    with open("ml_models/global_freq_encoders.pkl", "rb") as f:
+    with open("app/ml_models/global_freq_encoders.pkl", "rb") as f:
         global_freq_encoders = pickle.load(f)
     logger.info("Global frequency encoders loaded successfully")
 except FileNotFoundError:
@@ -39,7 +40,7 @@ except FileNotFoundError:
 
 # Load Layer 3 Local Model Encoders
 try:
-    with open("ml_models/label_encoders.pkl", "rb") as f:
+    with open("app/ml_models/label_encoders.pkl", "rb") as f:
         local_label_encoders = pickle.load(f)
     logger.info("Local label encoders loaded successfully")
 except FileNotFoundError:
@@ -47,7 +48,7 @@ except FileNotFoundError:
     local_label_encoders = {}
 
 try:
-    with open("ml_models/freq_encoders.pkl", "rb") as f:
+    with open("app/ml_models/freq_encoders.pkl", "rb") as f:
         local_freq_encoders = pickle.load(f)
     logger.info("Local frequency encoders loaded successfully")
 except FileNotFoundError:
@@ -90,7 +91,6 @@ def is_amount_outlier(amount, amount_mean, amount_std):
 
 def calculate_amount_stats_from_db(db, user_id=None):
     """Calculate amount statistics from database for outlier detection"""
-    from models.transaction import Transaction
     
     if user_id:
         # Calculate stats for specific user
@@ -208,7 +208,7 @@ def encode_local_features(transaction_obj):
 
 def get_user_transaction_stats(db_session, user_id):
     """Get user transaction statistics for rule-based detection (Layer 3)"""
-    from models.transaction import Transaction
+    
     
     # Get all past transactions for the user
     user_transactions = db_session.query(Transaction).filter(
@@ -284,7 +284,7 @@ def rule_based_layer3_predict(transaction_obj, user_stats, distance_from_last):
     rules_triggered = []
 
     # Use features as-is, do not encode again
-    features = transaction_obj if isinstance(transaction_obj, dict) else transaction_obj._dict_
+    features = transaction_obj if isinstance(transaction_obj, dict) else transaction_obj.__dict__
 
     # RULE 1: Extreme High Amount Transactions
     if amount > user_stats['amount_98_percentile']:

@@ -1,0 +1,111 @@
+/* profile.css */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #0f0f0f 0%, #070707 100%);
+}
+
+.auth-card {
+  background: rgba(10, 10, 10, 0.9);
+  padding: 2rem 3rem;
+  border: 2px solid #00ff99;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 12px #00ff99;
+}
+
+.auth-heading {
+  color: #00ff99;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.profile-details {
+  margin-bottom: 1.5rem;
+}
+
+.profile-item {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.profile-label {
+  width: 120px;
+  font-weight: 600;
+  color: #00ffcc;
+}
+
+.profile-value {
+  flex: 1;
+  color: #ccc;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #00ff99;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  text-decoration: none;
+}
+
+.auth-button:hover {
+  background: #00cc77;
+}
+
+.auth-button-secondary {
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  color: #00ffcc;
+  font-weight: bold;
+  border: 2px solid #00ffcc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  text-decoration: none;
+}
+
+.auth-button-secondary:hover {
+  background: #00ffcc;
+  color: #000;
+}
+
+.auth-error {
+  background: #ff0033;
+  color: #fff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.auth-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.auth-link a {
+  color: #00ffcc;
+  text-decoration: none;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}

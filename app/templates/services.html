@@ -1,7 +1,65 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<section class="services">
-  <h2>Our Services</h2>
-  <p>Explore the suite of fraud detection tools we offer.</p>
+<section class="services-container">
+  <div class="services-header">
+    <h2>Our Services</h2>
+    <p>Empowering secure finance with cutting-edge AI detection tools.</p>
+  </div>
+
+  <!-- Row 1 -->
+   <div class="service-row">
+    <div class="service-card-block">
+      <div class="service-icon">💸</div>
+      <h3>Transaction Anomaly Detection</h3>
+      <a href="/services/make-transaction" class="service-btn">Check Transaction</a>
+    </div>
+    <div class="service-features-block">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Behavioral profiling of transactions</li>
+        <li>Detect unusual amounts, locations, patterns</li>
+        <li>Supports rule + ML hybrid detection</li>
+        <li>Prevents frauds in real time</li>
+      </ul>
+    </div>
+  </div>
+  
+  </div>
+
+  <!-- Row 2 (Fixed: Card left, Features right) -->
+  <div class="service-row">
+    <div class="service-card-block">
+      <div class="service-icon">🔍</div>
+      <h3>QR Scam Detection</h3>
+      <a href="/qr-scan" class="service-btn">Scan QR</a>
+    </div>
+    <div class="service-features-block">
+      <h4>How it works:</h4>
+      <ul>
+        <li>Scan QR to extract and analyze embedded links</li>
+        <li>Detect known scam URLs & UPI fraud formats</li>
+        <li>Heuristic and ML-based threat scoring</li>
+        <li>Visual alerting & scam prevention</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Row 3 -->
+  <div class="service-row">
+    <div class="service-card-block">
+      <div class="service-icon">🎙️</div>
+      <h3>Vishing Detection</h3>
+      <a href="/vishing" class="service-btn">Try Now</a>
+    </div>
+    <div class="service-features-block">
+      <h4>How it works:</h4>
+      <ul>
+        <li>AI-based voice pattern analysis</li>
+        <li>Detects urgency, manipulation & fraud cues</li>
+        <li>Speech-to-text with vishing label detection</li>
+        <li>Instant feedback on call safety</li>
+      </ul>
+    </div>
 </section>
 {% endblock %}

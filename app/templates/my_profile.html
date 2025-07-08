@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-heading">👤 My Profile</h2>
+
+    {% if error %}
+      <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <div class="profile-details">
+      <div class="profile-item">
+        <span class="profile-label">Full Name:</span>
+        <span class="profile-value">{{ user.full_name }}</span>
+      </div>
+      <div class="profile-item">
+        <span class="profile-label">Mobile Number:</span>
+        <span class="profile-value">{{ user.mobile_no }}</span>
+      </div>
+      <div class="profile-item">
+        <span class="profile-label">UPI ID:</span>
+        <span class="profile-value">{{ user.upi_id }}</span>
+      </div>
+      {% if user.address %}
+      <div class="profile-item">
+        <span class="profile-label">Address:</span>
+        <span class="profile-value">{{ user.address }}</span>
+      </div>
+      {% endif %}
+      {% if user.transaction_limit is not none %}
+      <div class="profile-item">
+        <span class="profile-label">Transaction Limit:</span>
+        <span class="profile-value">₹{{ user.transaction_limit }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="profile-actions">
+      <a href="/edit/" class="auth-button">Edit Profile</a>
+      <p class="auth-link"><a href="/dashboard">Back to Dashboard</a></p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

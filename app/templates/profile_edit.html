@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - CipherStorm{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_edit.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-heading">✏️ Edit Profile Information</h2>
+
+    {% if error %}
+      <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/edit/profile" class="auth-form">
+      <input
+        type="text"
+        name="full_name"
+        placeholder="👤 Full Name"
+        required
+        class="auth-input"
+        value="{{ profile.full_name }}"
+      />
+      <input
+        type="tel"
+        name="mobile_no"
+        placeholder="📱 Mobile Number"
+        required
+        class="auth-input"
+        pattern="[0-9]{10}"
+        maxlength="10"
+        value="{{ profile.mobile_no }}"
+      />
+      <input
+        type="text"
+        name="upi_id"
+        placeholder="💸 UPI ID"
+        required
+        class="auth-input"
+        value="{{ profile.upi_id }}"
+      />
+      <textarea
+        name="address"
+        rows="3"
+        placeholder="🏠 Address (optional)"
+        class="auth-input"
+      >{{ profile.address }}</textarea>
+      <input
+        type="number"
+        name="transaction_limit"
+        placeholder="💰 Transaction Limit"
+        class="auth-input"
+        min="0"
+        step="0.01"
+        value="{{ profile.transaction_limit }}"
+      />
+      <button type="submit" class="auth-button">Save Changes</button>
+    </form>
+
+    <p class="auth-link"><a href="/profile/my_profile">Cancel</a></p>
+  </div>
+</section>
+
+
+<script>
+    // Password validation
+    document.getElementById('new_password')?.addEventListener('input', function () {
+        const newPassword = this.value;
+        const confirmPassword = document.getElementById('confirm_password');
+
+        if (newPassword.length > 0 && newPassword.length < 6) {
+            this.setCustomValidity('Password must be at least 6 characters long');
+        } else {
+            this.setCustomValidity('');
+        }
+
+        // Check if confirm password matches
+        if (confirmPassword.value && confirmPassword.value !== newPassword) {
+            confirmPassword.setCustomValidity('Passwords do not match');
+        } else {
+            confirmPassword.setCustomValidity('');
+        }
+    });
+
+    document.getElementById('confirm_password')?.addEventListener('input', function () {
+        const newPassword = document.getElementById('new_password').value;
+
+        if (this.value !== newPassword) {
+            this.setCustomValidity('Passwords do not match');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+    // Mobile number validation
+    document.getElementById('mobile_no')?.addEventListener('input', function () {
+        const mobile = this.value.replace(/\D/g, ''); // Remove non-digits
+
+        if (mobile.length < 10) {
+            this.setCustomValidity('Mobile number must be at least 10 digits');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+</script>
+{% endblock %}
