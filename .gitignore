@@ -10,10 +10,11 @@ venv/
 env/
 ENV/
 
-# Environment variables
+# Environment variables and secrets
 .env
 .env.local
 .env.*.local
+*.csv
 
 # Installer logs
 pip-log.txt
@@ -37,3 +38,6 @@ Thumbs.db
 # Logs and databases
 *.log
 *.sqlite3
+
+# Large model files
+*.safetensors
