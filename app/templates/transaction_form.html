@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .text-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+    .text-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        min-height: 500px;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .text-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .text-description {
+        color: #ccc;
+        font-size: 1.1rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: block;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .form-control {
+        font-family: 'Poppins', sans-serif;
+        height: 55px;
+        font-size: 1.1rem;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        padding: 0 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: rgba(0, 255, 204, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        outline: none;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Remove spinner arrows from number input */
+    input[type="number"].form-control::-webkit-inner-spin-button,
+    input[type="number"].form-control::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type="number"].form-control {
+        -moz-appearance: textfield;
+    }
+
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(0, 255, 204, 0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+    }
+    
+    select.form-control option {
+        background: rgba(15, 15, 15, 0.97);
+        color: #fff;
+        padding: 10px;
+    }
+
+    .btn-submit {
+        font-family: 'Poppins', sans-serif;
+        height: 58px;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        width: 100%;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 255, 204, 0.2);
+    }
+
+    .feature-item {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: all 0.3s ease;
+        gap: 1rem;
+    }
+
+    .feature-item:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+        transform: translateY(-3px);
+    }
+
+    .feature-icon {
+        color: #00ffcc;
+        font-size: 2rem;
+        background: rgba(0, 255, 204, 0.1);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        background: rgba(0, 255, 204, 0.2);
+        transform: scale(1.1);
+    }
+
+    .feature-text {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .success-message {
+        background: rgba(0, 255, 204, 0.1);
+        border: 2px solid rgba(0, 255, 204, 0.3);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #00ffcc;
+        text-align: center;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 15, 15, 0.95);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .loading-spinner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid rgba(0, 255, 204, 0.1);
+        border-left-color: #00ffcc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-overlay h4 {
+        color: #00ffcc;
+        margin: 1.5rem 0 0.5rem;
+        font-weight: 600;
+        font-size: 1.4rem;
+    }
+
+    .loading-overlay .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="auth-container">
+  <div class="text-container">
+    {% if success %}
+    <div class="success-message">
+      <i class="fa-duotone fa-circle-check fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+      {{ success }}
+    </div>
+    {% endif %}
+    
+    <form method="POST" action="/transaction/process" class="text-card" id="transactionForm">
+      <h1 class="text-title">
+        <i class="fa-duotone fa-money-bill-transfer fa-sm" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+        Make Transaction
+      </h1>
+      <p class="text-description">Securely transfer money with our advanced fraud detection system. Fill in the details below to process your transaction.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="amount">
+          <i class="fa-duotone fa-dollar-sign fa-fw" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>
+          Amount
+        </label>
+        <input
+          type="number"
+          id="amount"
+          step="0.01"
+          min="0"
+          max="99999999.99"
+          name="amount"
+          placeholder="Enter amount to transfer"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="transaction_type">
+           <i class="fa-duotone fa-arrow-right-arrow-left fa-fw" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>
+          Transaction Type
+        </label>
+        <select id="transaction_type" name="transaction_type" class="form-control" required>
+          <option value="">Select Transaction Type</option>
+          <option value="P2M">P2M (Person to Merchant)</option>
+          <option value="P2P">P2P (Person to Person)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="payment_method">
+          <i class="fa-duotone fa-credit-card fa-fw" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>
+          Payment Method
+        </label>
+        <select id="payment_method" name="payment_method" class="form-control" required>
+          <option value="">Select Payment Method</option>
+          <option value="QR">QR Code</option>
+          <option value="Card">Card</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="recipient_upi_id">
+          <i class="fa-duotone fa-at fa-fw" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>
+          Recipient UPI ID
+        </label>
+        <input
+          type="text"
+          id="recipient_upi_id"
+          name="recipient_upi_id"
+          placeholder="Enter recipient's UPI ID"
+          maxlength="50"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <i class="fa-duotone fa-paper-plane fa-lg" style="--fa-primary-color: #000; --fa-secondary-color: #000;"></i>
+        Process Transaction
+      </button>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fa-duotone fa-lock"></i>
+          </div>
+          <div class="feature-text">Secure Transfer</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fa-duotone fa-shield"></i>
+          </div>
+          <div class="feature-text">Fraud Protection</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fa-duotone fa-gauge-high"></i>
+          </div>
+          <div class="feature-text">Instant Transfer</div>
+        </div>
+      </div>
+  </form>
+</div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="text-center">
+        <div class="loading-spinner"></div>
+        <h4>Processing Transaction</h4>
+        <p class="text-muted">Please wait while we verify and process your transaction</p>
+    </div>
+</div>
+
+<script>
+document.getElementById('transactionForm').addEventListener('submit', function(e) {
+    document.getElementById('loadingOverlay').classList.add('active');
+});
+</script>
+{% endblock %}

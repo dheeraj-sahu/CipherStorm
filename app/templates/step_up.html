@@ -1,0 +1,390 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+    .step-up-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        padding: 2rem;
+    }
+
+    .step-up-card {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 3rem;
+        max-width: 800px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 60px rgba(0, 255, 153, 0.3);
+        animation: cardPulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes cardPulse {
+        from { box-shadow: 0 20px 60px rgba(0, 255, 204, 0.3); }
+        to { box-shadow: 0 25px 80px rgba(0, 255, 204, 0.5); }
+    }
+
+    .alert-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        animation: bounce 1s ease-in-out infinite;
+    }
+
+    .alert-icon .fas {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+
+    .step-up-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .step-up-message {
+        color: #ccc;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .fraud-details {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(0, 255, 153, 0.05);
+        border: 2px solid rgba(0, 255, 204, 0.2);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: left;
+        box-shadow: 0 4px 16px rgba(0, 255, 153, 0.1);
+    }
+
+    .fraud-details h4 {
+        color: #00ffcc;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .fraud-details p {
+        color: #ccc;
+        margin-bottom: 0.5rem;
+    }
+
+    .fraud-details .score {
+        color: #ff6b6b;
+        font-weight: bold;
+    }
+
+    .layer-info {
+        background: rgba(255, 107, 107, 0.05);
+        border-left: 3px solid #ff6b6b;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        border-radius: 5px;
+    }
+
+    .layer-title {
+        color: #ff8e8e;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+    }
+
+    .otp-form {
+        margin-top: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+
+    .form-label {
+        display: block;
+        color: #00ffcc;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid rgba(0, 255, 204, 0.3);
+        border-radius: 15px;
+        color: #fff;
+        font-size: 1rem;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #00ff99;
+        box-shadow: 0 0 15px rgba(0, 255, 153, 0.3);
+    }
+
+    .otp-input {
+        text-align: center;
+        font-size: 1.5rem;
+        letter-spacing: 0.5rem;
+        font-weight: bold;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1rem;
+        display: inline-block;
+    }
+
+    .btn-send-otp {
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        color: #000;
+    }
+
+    .btn-verify {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        color: #fff;
+    }
+
+    .btn-cancel {
+        background: transparent;
+        border: 2px solid #666;
+        color: #666;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 153, 0.4);
+    }
+
+    .btn-verify:hover {
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .success-message, .error-message {
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+
+    .success-message {
+        background: rgba(0, 255, 153, 0.1);
+        border: 1px solid rgba(0, 255, 153, 0.3);
+        color: #00ff99;
+    }
+
+    .error-message {
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        color: #ff6b6b;
+    }
+
+    .loading {
+        display: none;
+        color: #00ffcc;
+        margin-top: 1rem;
+    }
+
+    .spinner {
+        border: 3px solid rgba(0, 255, 204, 0.3);
+        border-top: 3px solid #00ffcc;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Font Awesome Icon Styles */
+    .fas {
+        margin-right: 0.5rem;
+    }
+
+    .btn .fas {
+        font-size: 1.1rem;
+    }
+
+    h4 .fas {
+        color: #00ffcc;
+        margin-right: 0.75rem;
+    }
+
+    .form-label .fas {
+        color: #00ffcc;
+    }
+
+    @media (max-width: 768px) {
+        .step-up-card {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .step-up-title {
+            font-size: 1.5rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="step-up-container">
+    <div class="step-up-card">
+        <div class="alert-icon"><i class="fas fa-shield-exclamation"></i></div>
+        <h1 class="step-up-title">Step-Up Authentication Required</h1>
+        <p class="step-up-message">
+            For your security, please verify your identity using email OTP authentication to complete this transaction.
+        </p>
+
+        {% if fraud_details %}
+        <div class="fraud-details">
+            <h4><i class="fas fa-user-shield"></i> Authentication Required</h4>
+            <p>Additional verification is needed to process your transaction securely.</p>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <form class="otp-form" method="POST" action="/transaction/auth/step-up-verify">
+            {% if not otp_sent %}
+            <div class="btn-group">
+                <button type="submit" name="action" value="send_otp" class="btn btn-send-otp">
+                    <i class="fas fa-envelope"></i> Send OTP to My Email
+                </button>
+                <a href="/services/make-transaction" class="btn btn-cancel">
+                    <i class="fas fa-times"></i> Cancel Transaction
+                </a>
+            </div>
+            {% else %}
+            <div class="form-group">
+                <label class="form-label" for="otp"><i class="fas fa-key"></i> Enter OTP Code</label>
+                <input 
+                    type="text" 
+                    id="otp" 
+                    name="otp" 
+                    class="form-input otp-input" 
+                    placeholder="000000" 
+                    maxlength="6" 
+                    required
+                >
+                <p style="color: #999; font-size: 0.9rem; margin-top: 0.5rem;">Enter the 6-digit code sent to your registered email</p>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" name="action" value="verify_otp" class="btn btn-verify">
+                    <i class="fas fa-check-circle"></i> Verify & Proceed
+                </button>
+                <button type="submit" name="action" value="resend_otp" class="btn btn-send-otp">
+                    <i class="fas fa-sync-alt"></i> Resend OTP
+                </button>
+                <a href="/services/make-transaction" class="btn btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Hidden fields to pass data -->
+            <input type="hidden" name="email" value="{{ user_email or '' }}">
+            <input type="hidden" name="smtp_server" value="smtp.gmail.com">
+            <input type="hidden" name="smtp_port" value="587">
+            <input type="hidden" name="smtp_email" value="ankitkr1801@gmail.com">
+            <input type="hidden" name="smtp_password" value="kdgozojsgxumbdae">
+            {% if transaction_data %}
+            <input type="hidden" name="transaction_data" value="{{ transaction_data }}">
+            {% endif %}
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Processing...
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show loading spinner on form submission
+    document.querySelector('.otp-form').addEventListener('submit', function() {
+        document.getElementById('loading').style.display = 'block';
+    });
+
+    // Auto-focus OTP input if present
+    const otpInput = document.getElementById('otp');
+    if (otpInput) {
+        otpInput.focus();
+    }
+
+    // Format OTP input (numbers only)
+    if (otpInput) {
+        otpInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+    }
+
+    // Auto-submit form when OTP is complete
+    if (otpInput) {
+        otpInput.addEventListener('input', function(e) {
+            if (e.target.value.length === 6) {
+                setTimeout(() => {
+                    document.querySelector('button[value="verify_otp"]').click();
+                }, 500);
+            }
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,1043 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .output-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 15, 15, 0.97);
+        padding: 2rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .output-card {
+        background: rgba(15, 15, 15, 0.95);
+        border-radius: 20px;
+        padding: 0;
+        max-width: 800px;
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 255, 153, 0.15);
+        border: none;
+    }
+    .result-header {
+        padding: 2.5rem 2rem 2rem 2rem;
+        background: linear-gradient(45deg, rgba(0, 255, 153, 0.12), rgba(0, 255, 204, 0.10));
+        border-bottom: 1px solid rgba(0, 255, 153, 0.18);
+        margin-bottom: 0;
+    }
+    .result-header.suspicious {
+        background: linear-gradient(45deg, rgba(255, 107, 107, 0.13), rgba(255, 142, 142, 0.10));
+        border-bottom: 1px solid rgba(255, 107, 107, 0.18);
+    }
+    .result-content {
+        padding: 2rem 3rem 3rem 3rem;
+    }
+
+    @keyframes resultGlow {
+        from { 
+            box-shadow: 0 20px 60px rgba(0, 255, 153, 0.3);
+        }
+        to { 
+            box-shadow: 0 25px 80px rgba(0, 255, 153, 0.5);
+        }
+    }
+
+    .output-card.legitimate {
+        animation: resultGlowLegitimate 2s ease-in-out infinite alternate;
+    }
+
+    .output-card.suspicious {
+        animation: resultGlowSuspicious 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes resultGlowLegitimate {
+        from { 
+            box-shadow: 0 20px 60px rgba(0, 255, 153, 0.3);
+        }
+        to { 
+            box-shadow: 0 25px 80px rgba(0, 255, 153, 0.5);
+        }
+    }
+
+    @keyframes resultGlowSuspicious {
+        from { 
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+        }
+        to { 
+            box-shadow: 0 25px 80px rgba(255, 107, 107, 0.5);
+        }
+    }
+
+    .result-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        animation: iconPulse 1s ease-in-out;
+    }
+
+    .legitimate {
+        color: #00ff99;
+    }
+
+    .suspicious {
+        color: #ff6b6b;
+    }
+
+    @keyframes iconPulse {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    .result-title {
+        font-size: 2.7rem;
+        font-weight: bold;
+        margin: 0.5rem 0 1.2rem 0;
+        color: #00ffcc;
+        text-shadow: 0 2px 10px rgba(0, 255, 153, 0.13);
+        background: none;
+        -webkit-text-fill-color: initial;
+    }
+    .result-title.legitimate {
+        color: #00ffcc;
+        background: none;
+        -webkit-text-fill-color: initial;
+    }
+    .result-title.suspicious {
+        color: #ff6b6b;
+        background: none;
+        text-shadow: 0 2px 10px rgba(255, 107, 107, 0.13);
+        -webkit-text-fill-color: initial;
+    }
+    .result-message {
+        color: #e6e6e6;
+        font-size: 1.18rem;
+        margin: 0 auto 1.5rem auto;
+        line-height: 1.6;
+        opacity: 0.92;
+        max-width: 90%;
+    }
+
+    .confidence-info {
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .confidence-info.legitimate {
+        background: rgba(0, 255, 153, 0.1);
+        border: 1px solid rgba(0, 255, 153, 0.3);
+    }
+
+    .confidence-info.suspicious {
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .confidence-info h3 {
+        margin-bottom: 1.5rem;
+        font-size: 1.7rem;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+    }
+
+    .confidence-info.legitimate h3 {
+        color: #00ffcc;
+    }
+
+    .confidence-info.suspicious h3 {
+        color: #ff6b6b;
+    }
+
+    .confidence-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+    }
+
+    .confidence-row.legitimate {
+        border-bottom: 1px solid rgba(0, 255, 153, 0.2);
+    }
+
+    .confidence-row.suspicious {
+        border-bottom: 1px solid rgba(255, 107, 107, 0.2);
+    }
+
+    .confidence-row:last-child {
+        border-bottom: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .confidence-label {
+        color: #e6e6e6;
+        font-weight: 500;
+        font-size: 1.15rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .confidence-value {
+        font-weight: 600;
+        font-size: 1.15rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .confidence-value.legitimate {
+        color: #00ff99;
+    }
+
+    .confidence-value.suspicious {
+        color: #ff6b6b;
+    }
+
+    .analyzed-text {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        text-align: left;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .analyzed-text h4 {
+        color: #00ffcc;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;  /* Increased from 1.2rem */
+        font-weight: 500;
+    }
+
+    .analyzed-text p {
+        color: #ccc;
+        line-height: 1.8;  /* Increased from 1.6 */
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 1.35rem;  /* Added explicit font size */
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1rem;
+        display: inline-block;
+    }
+
+    .btn-report {
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        color: #000;
+    }
+
+    .btn-new-analysis {
+        background: transparent;
+        color: #00ff99;
+    }
+
+    .btn-new-analysis.legitimate {
+        border: 2px solid #00ff99;
+        color: #00ff99;
+    }
+
+    .btn-new-analysis.suspicious {
+        border: 2px solid #ff6b6b;
+        color: #ff6b6b;
+    }
+
+    .btn-services {
+        background: linear-gradient(45deg, #6c63ff, #8b80ff);
+        color: #fff;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.4);
+    }
+
+    /* Report Modal */
+    .report-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .report-content {
+        background: rgba(15, 15, 15, 0.98);
+        border: 2px solid #00ffcc;
+        border-radius: 15px;
+        margin: 2rem auto;
+        padding: 2rem;
+        max-width: 900px;
+        width: 90%;
+    }
+
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #00ffcc;
+        padding-bottom: 1rem;
+    }
+
+    .report-title {
+        color: #00ffcc;
+        font-size: 1.8rem;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+        color: #ff8e8e;
+    }
+
+    .report-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: rgba(0, 255, 153, 0.05);
+        border-radius: 10px;
+        border-left: 4px solid #00ff99;
+    }
+
+    .report-section.warning {
+        background: rgba(255, 107, 107, 0.05);
+        border-left-color: #ff6b6b;
+    }
+
+    .report-section h4 {
+        color: #00ffcc;
+        margin-bottom: 1.25rem;
+        font-size: 1.6rem;  /* Increased from 1.5rem */
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+    }
+
+    .report-section.warning h4 {
+        color: #ff6b6b;
+    }
+
+    .report-data {
+        color: #e6e6e6;
+        line-height: 1.8;  /* Increased from 1.6 */
+        font-size: 1.35rem;  /* Increased from 1.15rem */
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .report-data ul {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .report-data li {
+        margin-bottom: 0.5rem;
+    }
+
+    .warning-item {
+        color: #ff6b6b;
+    }
+
+    .safe-item {
+        color: #00ff99;
+    }
+
+    /* Score Grid Styles */
+    .score-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .score-card {
+        background: rgba(0, 255, 153, 0.05);
+        border: 1px solid rgba(0, 255, 153, 0.2);
+        border-radius: 12px;
+        padding: 1.25rem;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .score-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 153, 0.15);
+    }
+
+    .score-icon {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .score-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .score-label {
+        color: #e6e6e6;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .score-value {
+        color: #00ffcc;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .score-bar {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        height: 8px;
+        overflow: hidden;
+    }
+
+    .score-fill {
+        height: 100%;
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        border-radius: 8px;
+        transition: width 1s ease;
+    }
+
+    /* Layer Contributions Styles */
+    .layer-contributions {
+        margin-top: 2.5rem;
+    }
+
+    .layer-contributions h5 {
+        color: #00ffcc;
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .layer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .layer-card {
+        background: rgba(0, 255, 153, 0.05);
+        border: 1px solid rgba(0, 255, 153, 0.2);
+        border-radius: 12px;
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .layer-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 153, 0.15);
+    }
+
+    .layer-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .layer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .layer-bar {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        height: 8px;
+        overflow: hidden;
+    }
+
+    .layer-fill {
+        height: 100%;
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        border-radius: 8px;
+        transition: width 1s ease;
+    }
+
+    .layer-value {
+        color: #00ffcc;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .layer-score {
+        color: #999;
+        font-size: 0.95rem;
+    }
+
+    .score-legitimate {
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+    }
+
+    .score-suspicious {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    }
+
+    @media (max-width: 768px) {
+        .output-card {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .result-title {
+            font-size: 2rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+
+        .confidence-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .report-content {
+            margin: 1rem;
+            padding: 1rem;
+        }
+
+        .analyzed-text p {
+            font-size: 1.2rem;
+        }
+        
+        .report-data {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+
+
+<div class="output-container">
+    <div class="output-card">
+        {% if analysis_result %}
+            <div class="result-header{% if analysis_result.get('is_suspicious', True) %} suspicious{% endif %}">
+                {% if analysis_result.get('is_suspicious', True) %}
+                    <div class="result-icon suspicious">
+                        <i class="fa-duotone fa-triangle-exclamation fa-2x" style="--fa-primary-color: #ff6b6b; --fa-secondary-color: #ff8e8e;"></i>
+                    </div>
+                    <h1 class="result-title suspicious">Suspicious</h1>
+                    <p class="result-message">
+                        Our AI analysis has identified potential security risks in the provided text. Please review the detailed report below.
+                    </p>
+                {% else %}
+                    <div class="result-icon legitimate">
+                        <i class="fa-duotone fa-shield-check fa-2x" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                    </div>
+                    <h1 class="result-title legitimate">Legitimate</h1>
+                    <p class="result-message">
+                        Our AI analysis indicates that the provided text appears to be legitimate with no significant security concerns detected.
+                    </p>
+                {% endif %}
+            </div>
+            <div class="result-content">
+                <div class="analyzed-text">
+                    <h4><i class="fa-duotone fa-file-lines fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Analyzed Text</h4>
+                    <p>{{ analyzed_text[:500] }}{% if analyzed_text|length > 500 %}...{% endif %}</p>
+                </div>
+                <div class="confidence-info {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                    <h3><i class="fa-duotone fa-magnifying-glass-chart fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Analysis Summary</h3>
+                    <div class="confidence-row {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <span class="confidence-label">Final Classification:</span>
+                        <span class="confidence-value {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                            {{ analysis_result.get('classification', 'Unknown') }}
+                        </span>
+                    </div>
+                    <div class="confidence-row {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <span class="confidence-label">Overall Assessment:</span>
+                        <span class="confidence-value {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                            {% if analysis_result.get('is_suspicious', True) %}
+                                <i class="fa-duotone fa-triangle-exclamation" style="--fa-primary-color: #ff6b6b; --fa-secondary-color: #ff8e8e; margin-right: 0.5rem;"></i>Suspicious ({{ analysis_result.get('is_phishing', False) and 'Phishing' or 'Spam' }})
+                            {% else %}
+                                <i class="fa-duotone fa-shield-check" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Legitimate
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="confidence-row {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <span class="confidence-label">Confidence Score:</span>
+                        <span class="confidence-value {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">{{ "%.1f"|format(analysis_result.get('confidence', 0) * 100) }}%</span>
+                    </div>
+                    <div class="confidence-row {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <span class="confidence-label">Phishing Score:</span>
+                        <span class="confidence-value {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">{{ "%.3f"|format(analysis_result.get('phishing_score', 0)) }}</span>
+                    </div>
+                    <div class="confidence-row {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <span class="confidence-label">Risk Level:</span>
+                        <span class="confidence-value {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                            {% if analysis_result.get('phishing_score', 0) > 0.8 %}
+                                {% if analysis_result.get('is_suspicious', True) %}
+                                    <i class="fa-duotone fa-circle-exclamation" style="--fa-primary-color: #ff6b6b; --fa-secondary-color: #ff8e8e; margin-right: 0.5rem;"></i>High Risk
+                                {% else %}
+                                    <i class="fa-duotone fa-circle-check" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Very Safe
+                                {% endif %}
+                            {% elif analysis_result.get('phishing_score', 0) > 0.6 %}
+                                {% if analysis_result.get('is_suspicious', True) %}
+                                    <i class="fa-duotone fa-triangle-exclamation" style="--fa-primary-color: #ffd700; --fa-secondary-color: #ffe44d; margin-right: 0.5rem;"></i>Medium Risk
+                                {% else %}
+                                    <i class="fa-duotone fa-shield-check" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Safe
+                                {% endif %}
+                            {% elif analysis_result.get('phishing_score', 0) > 0.4 %}
+                                <i class="fa-duotone fa-triangle-exclamation" style="--fa-primary-color: #ffd700; --fa-secondary-color: #ffe44d; margin-right: 0.5rem;"></i>Moderate Risk
+                            {% else %}
+                                <i class="fa-duotone fa-shield-check" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Low Risk
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="confidence-row {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <span class="confidence-label">Analysis Method:</span>
+                        <span class="confidence-value {{ 'legitimate' if not analysis_result.get('is_suspicious', True) else 'suspicious' }}">Multi-Layer AI Analysis</span>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-report" onclick="showReport()">
+                        <i class="fa-duotone fa-chart-column fa-lg" style="--fa-primary-color: #000; --fa-secondary-color: #000; margin-right: 0.5rem;"></i>View Detailed Report
+                    </button>
+                    <a href="/services/text" class="btn btn-new-analysis {{ 'legitimate' if analysis_result and not analysis_result.get('is_suspicious', True) else 'suspicious' }}">
+                        <i class="fa-duotone fa-magnifying-glass fa-lg" style="margin-right: 0.5rem;"></i>New Analysis
+                    </a>
+                    <a href="/services" class="btn btn-services">
+                        <i class="fa-duotone fa-grid-2 fa-lg" style="--fa-primary-color: #fff; --fa-secondary-color: #fff; margin-right: 0.5rem;"></i>Back to Services
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="result-header suspicious">
+                <div class="result-icon suspicious">❌</div>
+                <h1 class="result-title suspicious">Analysis Error</h1>
+                <p class="result-message">
+                    Unable to analyze the provided text. Please try again or contact support if the issue persists.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Detailed Report Modal -->
+{% if analysis_result %}
+<div id="reportModal" class="report-modal">
+    <div class="report-content">
+        <div class="report-header">
+            <h2 class="report-title">
+                <i class="fa-duotone fa-magnifying-glass-chart fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>
+                Detailed Text Analysis Report
+            </h2>
+            <button class="close-btn" onclick="hideReport()">&times;</button>
+        </div>
+
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-chart-mixed fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Overall Analysis</h4>
+            <div class="report-data">
+                <p><strong>Final Assessment:</strong> 
+                    {% if analysis_result.get('is_suspicious', True) %}
+                        <span style="color: #ff6b6b;"><i class="fa-duotone fa-triangle-exclamation" style="--fa-primary-color: #ff6b6b; --fa-secondary-color: #ff8e8e; margin-right: 0.5rem;"></i>Suspicious Content</span>
+                    {% else %}
+                        <span style="color: #00ff99;"><i class="fa-duotone fa-shield-check" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Legitimate Content</span>
+                    {% endif %}
+                </p>
+                <p><strong>Classification:</strong> {{ analysis_result.get('classification', 'Unknown') }}</p>
+                <p><strong>Confidence Level:</strong> {{ "%.1f"|format(analysis_result.get('confidence', 0) * 100) }}%</p>
+                <p><strong>Phishing Score:</strong> {{ "%.3f"|format(analysis_result.get('phishing_score', 0)) }}</p>
+                <div class="score-bar">
+                    <div class="score-fill {{ 'score-suspicious' if analysis_result.get('is_suspicious', True) else 'score-legitimate' }}" 
+                         data-width="{{ analysis_result.get('confidence', 0) * 100 }}"></div>
+                </div>
+                <p><strong>Analysis Date:</strong> {{ analysis_result.get('timestamp', 'N/A') }}</p>
+            </div>
+        </div>
+
+        <!-- Layer 1 Results -->
+        {% if analysis_result.get('layer1_result') %}
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-microchip fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Layer 1: ML Model Analysis</h4>
+            <div class="report-data">
+                <p><strong>Primary Classification:</strong> {{ analysis_result.layer1_result.get('label', 'Unknown') }}</p>
+                <p><strong>Model Confidence:</strong> {{ "%.3f"|format(analysis_result.layer1_result.get('score', 0)) }}</p>
+                <p><strong>Phishing Probability:</strong> {{ "%.3f"|format(analysis_result.layer1_result.get('phishing_probability', 0)) }}</p>
+                
+                {% if analysis_result.layer1_result.get('details') %}
+                <div style="margin-top: 1rem;">
+                    <p><strong>Model Details:</strong></p>
+                    {% if analysis_result.layer1_result.details.get('bert_probs') %}
+                    <p>• BERT Probabilities: 
+                        {% for key, value in analysis_result.layer1_result.details.bert_probs.items() %}
+                            {{ key }}: {{ "%.3f"|format(value) }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% if analysis_result.layer1_result.details.get('zero_shot_probs') %}
+                    <p>• Zero-shot Probabilities: 
+                        {% for key, value in analysis_result.layer1_result.details.zero_shot_probs.items() %}
+                            {{ key }}: {{ "%.3f"|format(value) }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% if analysis_result.layer1_result.details.get('ensemble_probs') %}
+                    <p>• Ensemble Probabilities: 
+                        {% for key, value in analysis_result.layer1_result.details.ensemble_probs.items() %}
+                            {{ key }}: {{ "%.3f"|format(value) }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Layer 2 Results -->
+        {% if analysis_result.get('layer2_result') %}
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-brain fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Layer 2: Behavioral Analysis</h4>
+            <div class="report-data">
+                <p><strong>Emotion Score:</strong> {{ "%.3f"|format(analysis_result.layer2_result.get('emotion_score', 0)) }}</p>
+                <p><strong>Threat Score:</strong> {{ "%.3f"|format(analysis_result.layer2_result.get('threat_score', 0)) }}</p>
+                <p><strong>Urgency Score:</strong> {{ "%.3f"|format(analysis_result.layer2_result.get('urgency_score', 0)) }}</p>
+                
+                {% if analysis_result.layer2_result.get('details') %}
+                <div style="margin-top: 1rem;">
+                    <p><strong><i class="fa-duotone fa-chart-network fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Detailed Breakdown:</strong></p>
+                    {% if analysis_result.layer2_result.details.get('emotions') %}
+                    <p><i class="fa-duotone fa-face-smile fa-sm" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Emotions: 
+                        {% for key, value in analysis_result.layer2_result.details.emotions.items() %}
+                            {{ key }}: {{ "%.3f"|format(value) }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% if analysis_result.layer2_result.details.get('threat_scores') %}
+                    <p><i class="fa-duotone fa-shield-exclamation fa-sm" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Threat Categories: 
+                        {% for key, value in analysis_result.layer2_result.details.threat_scores.items() %}
+                            {% if key not in ['Banking Fraud', 'Terrorist Attack', 'Casual Conversation'] %}
+                                {{ key }}: {{ "%.3f"|format(value) }}{% if not loop.last %}, {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Layer 3 Results -->
+        {% if analysis_result.get('layer3_result') %}
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-brain fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Layer 3: AI Language Model Analysis</h4>
+            <div class="report-data">
+                <p><strong>Groq Classification:</strong> {{ analysis_result.layer3_result.get('groq_classification', 'Unknown') }}</p>
+                <p><strong>Groq Confidence:</strong> {{ "%.3f"|format(analysis_result.layer3_result.get('groq_confidence', 0)) }}</p>
+                <p><strong>Spam Probability:</strong> {{ "%.3f"|format(analysis_result.layer3_result.get('spam_probability', 0)) }}</p>
+                
+                {% if analysis_result.layer3_result.get('details') %}
+                <div style="margin-top: 1rem;">
+                    <p><strong>AI Analysis Details:</strong></p>
+                    {% if analysis_result.layer3_result.details.get('reason') %}
+                    <p>• Reasoning: {{ analysis_result.layer3_result.details.reason }}</p>
+                    {% endif %}
+                    {% if analysis_result.layer3_result.details.get('model_used') %}
+                    <p>• Model Used: {{ analysis_result.layer3_result.details.model_used }}</p>
+                    {% endif %}
+                    {% if analysis_result.layer3_result.details.get('raw_response') %}
+                    <p>• Raw Response: {{ analysis_result.layer3_result.details.raw_response }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Analysis Details -->
+        {% if analysis_result.get('analysis_details') %}
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-chart-pie fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Advanced Analysis Details</h4>
+            <div class="report-data">
+                {% set details = analysis_result.analysis_details %}
+                <div class="score-grid">
+                    <div class="score-card">
+                        <div class="score-icon">
+                            <i class="fa-duotone fa-face-smile fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                        </div>
+                        <div class="score-info">
+                            <span class="score-label">Emotion Score</span>
+                            <span class="score-value">{{ "%.3f"|format(details.get('emotion_score', 0)) }}</span>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: {{ details.get('emotion_score', 0) * 100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-icon">
+                            <i class="fa-duotone fa-shield-exclamation fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                        </div>
+                        <div class="score-info">
+                            <span class="score-label">Threat Score</span>
+                            <span class="score-value">{{ "%.3f"|format(details.get('threat_score', 0)) }}</span>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: {{ details.get('threat_score', 0) * 100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-icon">
+                            <i class="fa-duotone fa-timer fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                        </div>
+                        <div class="score-info">
+                            <span class="score-label">Urgency Score</span>
+                            <span class="score-value">{{ "%.3f"|format(details.get('urgency_score', 0)) }}</span>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: {{ details.get('urgency_score', 0) * 100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="score-card">
+                        <div class="score-icon">
+                            <i class="fa-duotone fa-brain-circuit fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                        </div>
+                        <div class="score-info">
+                            <span class="score-label">AI Confidence</span>
+                            <span class="score-value">{{ "%.3f"|format(details.get('groq_confidence', 0)) }}</span>
+                        </div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: {{ details.get('groq_confidence', 0) * 100 }}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if details.get('layer_contributions') %}
+                <div class="layer-contributions">
+                    <h5>
+                        <i class="fa-duotone fa-layer-group fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>
+                        Layer Contributions
+                    </h5>
+                    <div class="layer-grid">
+                        {% set contrib = details.layer_contributions %}
+                        <div class="layer-card">
+                            <div class="layer-header">
+                                <i class="fa-duotone fa-microchip fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                                <span>Layer 1</span>
+                            </div>
+                            <div class="layer-info">
+                                <div class="layer-bar">
+                                    <div class="layer-fill" style="width: {{ contrib.get('layer1_weight', 0) * 100 }}%"></div>
+                                </div>
+                                <span class="layer-value">{{ "%.1f"|format(contrib.get('layer1_weight', 0) * 100) }}%</span>
+                                <span class="layer-score">Score: {{ "%.3f"|format(contrib.get('layer1_score', 0)) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="layer-card">
+                            <div class="layer-header">
+                                <i class="fa-duotone fa-brain fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                                <span>Layer 2</span>
+                            </div>
+                            <div class="layer-info">
+                                <div class="layer-bar">
+                                    <div class="layer-fill" style="width: {{ contrib.get('layer2_weight', 0) * 100 }}%"></div>
+                                </div>
+                                <span class="layer-value">{{ "%.1f"|format(contrib.get('layer2_weight', 0) * 100) }}%</span>
+                                <span class="layer-score">Score: {{ "%.3f"|format(contrib.get('layer2_score', 0)) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="layer-card">
+                            <div class="layer-header">
+                                <i class="fa-duotone fa-robot fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+                                <span>Layer 3</span>
+                            </div>
+                            <div class="layer-info">
+                                <div class="layer-bar">
+                                    <div class="layer-fill" style="width: {{ contrib.get('layer3_weight', 0) * 100 }}%"></div>
+                                </div>
+                                <span class="layer-value">{{ "%.1f"|format(contrib.get('layer3_weight', 0) * 100) }}%</span>
+                                <span class="layer-score">Score: {{ "%.3f"|format(contrib.get('layer3_score', 0)) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if analysis_result.get('indicators') %}
+        <div class="report-section {{ 'warning' if analysis_result.get('is_suspicious', True) else '' }}">
+            <h4>🚨 Security Indicators</h4>
+            <div class="report-data">
+                <ul>
+                {% for indicator in analysis_result.get('indicators', []) %}
+                    <li class="{{ 'warning-item' if analysis_result.get('is_suspicious', True) else 'safe-item' }}">
+                        {{ indicator }}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if analysis_result.get('keywords') %}
+        <div class="report-section">
+            <h4>🔑 Key Terms Detected</h4>
+            <div class="report-data">
+                <p><strong>Flagged Keywords:</strong></p>
+                <ul>
+                {% for keyword in analysis_result.get('keywords', []) %}
+                    <li>{{ keyword }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if analysis_result.get('sentiment') %}
+        <div class="report-section">
+            <h4>😊 Sentiment Analysis</h4>
+            <div class="report-data">
+                <p><strong>Detected Sentiment:</strong> {{ analysis_result.get('sentiment', {}).get('label', 'Unknown') }}</p>
+                <p><strong>Sentiment Score:</strong> {{ "%.2f"|format(analysis_result.get('sentiment', {}).get('score', 0)) }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-file-lines fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Complete Text Analysis</h4>
+            <div class="report-data">
+                <p><strong>Analyzed Text:</strong></p>
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 5px; margin: 0.5rem 0; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto;">{{ analyzed_text }}</div>
+                <p><strong>Text Length:</strong> {{ analyzed_text|length }} characters</p>
+                <p><strong>Word Count:</strong> {{ analyzed_text.split()|length }} words</p>
+            </div>
+        </div>
+
+        <!-- Error Information -->
+        {% if analysis_result.get('error') %}
+        <div class="report-section warning">
+            <h4>⚠️ Analysis Errors</h4>
+            <div class="report-data">
+                <p><strong>Error Details:</strong> {{ analysis_result.error }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Raw Analysis Data (for debugging) -->
+        <div class="report-section">
+            <h4><i class="fa-duotone fa-code fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Raw Analysis Data</h4>
+            <div class="report-data">
+                <p><strong>Complete Analysis Object:</strong></p>
+                <div style="background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 5px; margin: 0.5rem 0; white-space: pre-wrap; word-wrap: break-word; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.9rem;">{{ analysis_result | tojson(indent=2) }}</div>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        {% if analysis_result.get('recommendations') %}
+        <div class="report-section">
+            <h4>💡 Recommendations</h4>
+            <div class="report-data">
+                <ul>
+                {% for recommendation in analysis_result.get('recommendations', []) %}
+                    <li>{{ recommendation }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; border-top: 1px solid rgba(0, 255, 153, 0.2);">
+            <button class="btn btn-lg btn-primary" onclick="hideReport()" style="font-size: 1.2rem; padding: 1.1rem 3.5rem; background: linear-gradient(45deg, #00ffcc, #00ff99); color: #000; border: none; border-radius: 30px; transition: all 0.3s ease; font-weight: bold; box-shadow: 0 2px 12px rgba(0,255,153,0.10);">
+                <i class="fa-duotone fa-xmark fa-lg" style="--fa-primary-color: #000; --fa-secondary-color: #000; margin-right: 0.75rem;"></i>
+                Close Report
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    function showReport() {
+        document.getElementById('reportModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideReport() {
+        document.getElementById('reportModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('reportModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideReport();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideReport();
+        }
+    });
+
+    // Animate score bar on load
+    window.addEventListener('load', function() {
+        const scoreFill = document.querySelector('.score-fill');
+        if (scoreFill) {
+            const width = scoreFill.getAttribute('data-width');
+            if (width) {
+                setTimeout(() => {
+                    scoreFill.style.transition = 'width 1s ease-in-out';
+                    scoreFill.style.width = width + '%';
+                }, 500);
+            }
+        }
+    });
+</script>
+
+{% endblock %}

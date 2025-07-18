@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .text-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+    .text-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        min-height: 500px;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .text-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+    }
+
+    @keyframes gradient {
+        0% { background-position: 0% center; }
+        50% { background-position: 100% center; }
+        100% { background-position: 0% center; }
+    }
+
+    .audio-upload {
+        font-family: 'Poppins', sans-serif;
+        height: 150px;
+        font-size: 1.1rem;
+        margin-bottom: 1.8rem;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    @keyframes shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .file-input-wrapper input[type=file] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+
+    .upload-btn {
+        font-family: 'Poppins', sans-serif;
+        height: 100%;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px dashed rgba(0, 255, 204, 0.3);
+        border-radius: 12px;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .upload-btn i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-btn:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+    }
+
+    .file-name {
+        color: #00ffcc;
+        margin-top: 1.5rem;
+        font-size: 1.1rem;
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .opinion-options {
+        display: flex;
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .opinion-option {
+        flex: 1;
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .opinion-option:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+    }
+
+    .opinion-option.selected {
+        background: rgba(0, 255, 204, 0.15);
+        border-color: rgba(0, 255, 204, 0.8);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+    }
+
+    .opinion-option i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #00ffcc;
+        transition: all 0.3s ease;
+    }
+
+    .opinion-option:hover i {
+        transform: scale(1.1);
+    }
+
+    .opinion-option p {
+        color: #fff;
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+    }
+
+    .analyze-btn {
+        font-family: 'Poppins', sans-serif;
+        height: 58px;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        width: 100%;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .analyze-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .analyze-btn:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.3);
+        transform: none;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    .analyze-btn:disabled::before {
+        display: none;
+    }
+
+    .form-label {
+        color: #00ffcc;
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 15, 15, 0.95);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .loading-spinner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid rgba(0, 255, 204, 0.1);
+        border-left-color: #00ffcc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-overlay h4 {
+        color: #00ffcc;
+        margin: 1.5rem 0 0.5rem;
+        font-weight: 600;
+        font-size: 1.4rem;
+    }
+
+    .loading-overlay .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-size: 1.1rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+    }
+
+    .feature-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #00ffcc;
+    }
+
+    .feature-text {
+        color: #fff;
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+    }
+</style>
+
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="text-center">
+        <div class="loading-spinner"></div>
+        <h4>Analyzing Call</h4>
+        <p class="text-muted">Please wait while we analyze your recording</p>
+    </div>
+</div>
+
+<div class="text-container">
+    <div class="text-card">
+        <h1 class="text-title">
+            <i class="fas fa-phone-alt me-3"></i>Vishing Call Analysis
+        </h1>
+        <p class="text-description">Protect yourself from voice phishing scams. Upload your recorded call for AI-powered analysis to detect potential fraud attempts and suspicious patterns.</p>
+
+        <form action="/services/vishing/analyze" method="post" enctype="multipart/form-data">
+                <!-- Audio Upload Section -->
+                <div class="audio-upload">
+                    <div class="file-input-wrapper">
+                        <div class="upload-btn" id="uploadLabel">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <div>Drag & drop an audio file or click to browse</div>
+                            <div class="text-muted" style="font-size: 0.9rem;">(Supported formats: MP3, WAV)</div>
+                        </div>
+                        <input type="file" name="audio_file" id="audioFile" accept="audio/*" onchange="updateFileName(this)" required>
+                    </div>
+                    <div id="fileName" class="file-name"></div>
+                </div>
+
+                <!-- User Opinion Section -->
+                <div>
+                    <label class="form-label">What's your opinion about this call?</label>
+                    <div class="opinion-options">
+                        <div class="opinion-option" data-value="confirm_suspicious" onclick="selectOpinion(this)">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Suspicious Call</p>
+                        </div>
+                        <div class="opinion-option" data-value="insufficient_evidence" onclick="selectOpinion(this)">
+                            <i class="fas fa-question-circle"></i>
+                            <p>Insufficient Evidence</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="user_opinion" id="userOpinion" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="analyze-btn" id="submitButton" disabled>
+                    <i class="fas fa-search me-2"></i>Analyze Call
+                </button>
+            </form>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-wave-square feature-icon"></i>
+                    <span class="feature-text">Voice Pattern Analysis</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-microphone-lines feature-icon"></i>
+                    <span class="feature-text">Call Context Analysis</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-brain feature-icon"></i>
+                    <span class="feature-text">AI-Powered Screening</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-user-shield feature-icon"></i>
+                    <span class="feature-text">Real-time Threat Alert</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateFileName(input) {
+        const fileName = input.files[0]?.name;
+        document.getElementById('fileName').textContent = fileName || '';
+        validateForm();
+    }
+
+    function selectOpinion(element) {
+        // Remove selected class from all options
+        document.querySelectorAll('.opinion-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+
+        // Add selected class to clicked option
+        element.classList.add('selected');
+        document.getElementById('userOpinion').value = element.dataset.value;
+        validateForm();
+    }
+
+    function validateForm() {
+        const hasAudio = document.getElementById('audioFile').files.length > 0;
+        const hasOpinion = document.getElementById('userOpinion').value !== '';
+        document.getElementById('submitButton').disabled = !(hasAudio && hasOpinion);
+    }
+
+    // Drag and drop functionality
+    const uploadLabel = document.getElementById('uploadLabel');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadLabel.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadLabel.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadLabel.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        uploadLabel.style.background = 'rgba(0, 255, 204, 0.2)';
+        uploadLabel.style.borderColor = '#00ffcc';
+    }
+
+    function unhighlight(e) {
+        uploadLabel.style.background = 'rgba(0, 255, 204, 0.1)';
+        uploadLabel.style.borderColor = 'rgba(0, 255, 204, 0.3)';
+    }
+
+    uploadLabel.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        document.getElementById('audioFile').files = files;
+        updateFileName(document.getElementById('audioFile'));
+    }
+
+    // Loading animation
+    document.querySelector('form').addEventListener('submit', function() {
+        document.getElementById('loadingOverlay').classList.add('active');
+    });
+</script>
+{% endblock %}

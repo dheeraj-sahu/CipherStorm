@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 15, 15, 0.97);
+        padding: 2rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 4px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 600px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+        from { box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+        to { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+    }
+
+    .auth-heading {
+        color: #00ffcc;
+        font-size: 2.5rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 2rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .auth-error {
+        background: rgba(255, 0, 0, 0.1);
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        color: #ff3333;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .auth-input {
+        width: 90%;
+        padding: 1rem 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.4rem;
+        transition: all 0.3s ease;
+    }
+
+    .auth-input:focus {
+        outline: none;
+        border-color: rgba(0, 255, 204, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+    }
+
+    .auth-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .auth-button {
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        color: #000;
+        border: none;
+        padding: 1.2rem;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .auth-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 2rem;
+        color: #ccc;
+        font-size: 1.1rem;
+    }
+
+    .auth-link a {
+        color: #00ffcc;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .auth-link a:hover {
+        color: #00ff99;
+        text-decoration: underline;
+    }
+</style>
+
+<section class="auth-container">
+    <div class="auth-card">
+        <h2 class="auth-heading">🛡️ Create Account</h2>
+
+    {% if error %}
+      <div class="auth-error">
+        {{ error }}
+      </div>
+    {% endif %}
+
+        <form method="POST" action="/auth/signup" class="auth-form">
+            <input
+                type="text"
+                name="username"
+                placeholder="👤 Username"
+                required
+                class="auth-input"
+            >
+            <input
+                type="email"
+                name="email"
+                placeholder="📧 Email"
+                required
+                class="auth-input"
+            >
+            <input
+                type="password"
+                name="password"
+                placeholder="🔒 Password"
+                required
+                class="auth-input"
+            >
+
+            <button type="submit" class="auth-button">Sign Up</button>
+        </form>
+
+        <p class="auth-link">
+            Already have an account? <a href="/auth/login">Login here</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

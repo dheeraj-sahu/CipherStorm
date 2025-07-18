@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .text-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+    .text-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        min-height: 500px;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .text-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+    }
+
+    .text-description {
+        color: #ccc;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: block;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        font-family: 'Poppins', sans-serif;
+        height: 55px;
+        font-size: 1.1rem;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        padding: 0 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: rgba(0, 255, 204, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        outline: none;
+    }
+
+    .btn-submit {
+        font-family: 'Poppins', sans-serif;
+        height: 58px;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        width: 100%;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 255, 204, 0.2);
+    }
+
+    .feature-item {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: all 0.3s ease;
+        gap: 1rem;
+    }
+
+    .feature-item:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+        transform: translateY(-3px);
+    }
+
+    .feature-icon {
+        color: #00ffcc;
+        font-size: 2rem;
+        background: rgba(0, 255, 204, 0.1);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        background: rgba(0, 255, 204, 0.2);
+        transform: scale(1.1);
+    }
+
+    .feature-text {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    /* Loading Animation */
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        backdrop-filter: blur(8px);
+    }
+
+    .loading-spinner {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(0, 255, 204, 0.1);
+        border-left: 4px solid #00ffcc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+        font-family: 'Poppins', sans-serif;
+        color: #00ffcc;
+        margin-top: 20px;
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-align: center;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+    }
+</style>
+
+<div class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Verifying Customer Care Number...</div>
+</div>
+
+<div class="text-container">
+    <div class="text-card">
+        <h1 class="text-title">Customer Care Verification</h1>
+        <p class="text-description">Protect yourself from fraudulent customer care numbers. Enter the company name and number below to verify its authenticity in real-time.</p>
+        
+        <form action="/customer_care/verify_form" method="post" onsubmit="document.querySelector('.loading-overlay').style.display='flex';">
+            <div class="form-group">
+                <label for="company_name" class="form-label">Company Name</label>
+                <input type="text" id="company_name" name="company_name" class="form-control" required placeholder="Enter company name">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number" class="form-label">Customer Care Number</label>
+                <input type="tel" id="phone_number" name="phone_number" class="form-control" required placeholder="Enter customer care number">
+            </div>
+            
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-shield-check"></i>
+                Verify Number
+            </button>
+        </form>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="feature-text">Real-Time Web Scraping & Data Processing</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-phone-square"></i>
+                </div>
+                <div class="feature-text">Enhanced Phone Intelligence Integration</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="feature-text">LLM-Powered Phone Number Filtering</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

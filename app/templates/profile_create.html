@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% include "navbar.html" %}
+
+{% block title %}Create Profile - CipherStorm{% endblock %}
+
+{% block content %}
+<style>
+
+    .auth-container {
+        min-height: calc(100vh - 80px); /* Reduced height to account for navbar */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 15, 15, 0.97);
+        padding: 1rem 2rem;
+        margin-top: 75px; /* Match navbar height */
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 4px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 1.5rem 2rem; /* Adjusted padding */
+        width: 100%;
+        max-width: 900px; /* Increased width */
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+        from { box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+        to { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+    }
+
+    .auth-heading {
+        color: #00ffcc;
+        font-size: 2rem; /* Slightly reduced font size */
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1rem; /* Reduced margin */
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .form-container {
+        background: rgba(0, 255, 204, 0.05);
+        border: 2px solid rgba(0, 255, 204, 0.2);
+        border-radius: 15px;
+        padding: 1.2rem; /* Slightly reduced padding */
+    }
+
+    .input-group {
+        margin-bottom: 1rem; /* Slightly reduced margin */
+    }
+
+    .input-label {
+        display: block;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        margin-bottom: 0.4rem; /* Reduced margin */
+        font-weight: 500;
+    }
+
+    .auth-input {
+        width: 100%;
+        padding: 0.8rem 1.2rem; /* Reduced padding */
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem; /* Slightly reduced font size */
+        transition: all 0.3s ease;
+    }
+
+    .auth-input:focus {
+        outline: none;
+        border-color: rgba(0, 255, 204, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+    }
+
+    .auth-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    select.auth-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300ffcc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.2em;
+    }
+
+    input[type="number"].auth-input::-webkit-inner-spin-button,
+    input[type="number"].auth-input::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .auth-button {
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        color: #000;
+        border: none;
+        padding: 0.8rem 2rem; /* Reduced padding */
+        border-radius: 12px;
+        font-size: 1.1rem; /* Slightly reduced font size */
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 0.8rem; /* Reduced margin */
+    }
+
+    .auth-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h2 class="auth-heading">Create Your Profile</h2>
+        
+        <form method="POST" action="/profile/" class="form-container">
+            <div class="input-group">
+                <label class="input-label">Full Name</label>
+                <input type="text" name="full_name" class="auth-input" required 
+                       placeholder="Enter your full name" />
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Mobile Number</label>
+                <input type="tel" name="mobile_no" class="auth-input" required 
+                       placeholder="Enter your mobile number" pattern="[0-9]{10}" 
+                       title="Please enter a valid 10-digit mobile number" />
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">UPI ID</label>
+                <input type="text" name="upi_id" class="auth-input" required 
+                       placeholder="Enter your UPI ID" />
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Transaction Limit (₹)</label>
+                <input type="number" name="transaction_limit" class="auth-input" required 
+                       placeholder="Set your transaction limit" min="0" step="100" />
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Country</label>
+                <select name="country" class="auth-input" required>
+                    <option value="India" selected>India</option>
+                    <option value="USA">United States</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="UAE">United Arab Emirates</option>
+                    <option value="Germany">Germany</option>
+                    <option value="France">France</option>
+                    <option value="Japan">Japan</option>
+                </select>
+            </div>
+
+            <button type="submit" class="auth-button">Create Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

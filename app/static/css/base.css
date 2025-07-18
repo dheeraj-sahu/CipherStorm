@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0e0e0e;
+  color: #e0e0e0;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+a {
+  text-decoration: none;
+  color: #00ffcc;
+}
+
+a:hover {
+  color: #00ffaa;
+}

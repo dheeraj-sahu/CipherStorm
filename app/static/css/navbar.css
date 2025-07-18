@@ -1,0 +1,101 @@
+/* .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0d1117;
+  padding: 8px 20px; 
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+} */
+
+/* .navbar .brand {
+  font-size: 1.4rem;
+  color: #0ef;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+} */
+
+/* .nav-links li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+  color: #0ef;
+}
+
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+} */
+
+/* .nav-auth .btn {
+  background-color: transparent;
+  border: 1px solid #0ef;
+  color: #0ef;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.nav-auth .btn:hover {
+  background-color: #0ef;
+  color: #000;
+} */
+
+/* .profile-menu {
+  position: relative;
+  cursor: pointer;
+  padding: 10px 8px; 
+} */
+
+/* .profile-menu .icon {
+  font-size: 18px;
+} */
+
+/* .profile-menu .dropdown {
+  display: none;
+  position: absolute;
+  top: 100%; 
+  right: -8px;
+  background-color: #161b22;
+  border: 1px solid #0ef;
+  border-radius: 6px;
+  list-style: none;
+  padding: 8px 0;
+  min-width: 140px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin: 0; 
+} */
+
+/* .profile-menu .dropdown li a {
+  display: block;
+  padding: 8px 16px;
+  color: #ccc;
+  text-decoration: none;
+  transition: background 0.2s;
+} */
+
+/* .profile-menu .dropdown li a:hover {
+  background-color: #0ef;
+  color: #000;
+} */
+
+/* The key fix - hover on either the menu OR the dropdown keeps it visible */
+/* .profile-menu:hover .dropdown {
+  display: block;
+} */

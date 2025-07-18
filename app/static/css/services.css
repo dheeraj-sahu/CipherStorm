@@ -1,0 +1,124 @@
+.services-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #0f0f0f 0%, #070707 100%);
+  padding: 4rem 2rem;
+  color: #00ffcc;
+  font-family: 'Inter', sans-serif;
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.services-header h2 {
+  font-size: 2.5rem;
+  color: #00ff99;
+}
+
+.services-header p {
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+/* Layout for each row */
+.service-row {
+  display: flex;
+  justify-content: center; /* center everything horizontally */
+  align-items: flex-start;
+  margin: 6rem auto;
+  gap: 3rem; /* increased gap between card and features */
+  flex-wrap: wrap;
+  max-width: 1200px; /* limits total width of each row */
+  padding: 0 1rem; /* adds breathing space on small screens */
+}
+
+.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Left or right card block */
+.service-card-block {
+  flex: 1;
+  min-width: 300px;
+  background: rgba(15, 15, 15, 0.9);
+  border: 2px solid #00ff99;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 0 20px #00ff99;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card-block:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px #00ffaa;
+}
+
+.service-icon {
+  font-size: 3.5rem;
+  color: #00ff99;
+  margin-bottom: 1rem;
+}
+
+.service-card-block h3 {
+  font-size: 1.6rem;
+  color: #00ffcc;
+  margin-bottom: 1rem;
+}
+
+.service-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #00ff99;
+  color: #000;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: background 0.3s;
+}
+
+.service-btn:hover {
+  background: #00cc77;
+}
+
+/* Features */
+.service-features-block {
+  flex: 1;
+  min-width: 300px;
+  background: rgba(10, 10, 10, 0.6);
+  border-left: 4px solid #00ffcc;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.service-features-block h4 {
+  color: #00ffcc;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.service-features-block ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  color: #ccc;
+}
+
+.service-features-block li {
+  margin-bottom: 0.75rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .service-row,
+  .reverse {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .service-features-block,
+  .service-card-block {
+    width: 100%;
+  }
+}

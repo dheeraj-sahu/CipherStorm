@@ -1,0 +1,728 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+    .results-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        padding: 2rem;
+    }
+
+    /* New icon styles */
+    .fas {
+        margin-right: 0.5rem;
+    }
+
+    .success-icon .fas {
+        font-size: 5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-right: 0;
+    }
+
+    h3 .fas, h4 .fas {
+        color: #00ffcc;
+        margin-right: 0.75rem;
+    }
+
+    .text-success {
+        color: #00ff99;
+    }
+
+    .btn .fas {
+        font-size: 1.1rem;
+    }
+
+    .report-section h4 .fas {
+        width: 1.5rem;
+        text-align: center;
+    }
+
+    .results-card {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 3.5rem;
+        max-width: 900px;  /* Increased from 800px */
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 60px rgba(0, 255, 153, 0.3);
+        animation: successGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes successGlow {
+        from { box-shadow: 0 20px 60px rgba(0, 255, 153, 0.3); }
+        to { box-shadow: 0 25px 80px rgba(0, 255, 153, 0.5); }
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        color: #00ff99;
+        margin-bottom: 1.5rem;
+        animation: checkmark 1s ease-in-out;
+    }
+
+    @keyframes checkmark {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    .success-title {
+        font-family: 'Poppins', sans-serif;
+        color: #00ff99;
+        font-size: 2.8rem;  /* Increased from 2.5rem */
+        font-weight: 600;
+        margin-bottom: 1rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .success-message {
+        color: #ccc;
+        font-size: 1.35rem;  /* Increased from 1.2rem */
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .transaction-summary {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(0, 255, 153, 0.05);
+        border: 2px solid rgba(0, 255, 204, 0.2);
+        border-radius: 15px;
+        padding: 2.5rem;  /* Increased padding */
+        margin-bottom: 2rem;
+        text-align: left;
+    }
+
+    .transaction-summary h3 {
+        color: #00ffcc;
+        margin-bottom: 1.5rem;
+        font-size: 1.7rem;  /* Increased from 1.5rem */
+        text-align: center;
+    }
+
+    .summary-label {
+        color: #ccc;
+        font-weight: 500;
+        font-size: 1.3rem;  /* Increased */
+    }
+
+    .summary-value {
+        color: #00ff99;
+        font-weight: bold;
+        font-size: 1.3rem;  /* Increased */
+    }
+
+    .security-info {
+        background: rgba(0, 255, 204, 0.1);
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        border-radius: 10px;
+        padding: 2rem;  /* Increased padding */
+        margin-bottom: 2rem;
+    }
+
+    .security-info h4 {
+        color: #00ffcc;
+        margin-bottom: 1.2rem;
+        font-size: 1.4rem;  /* Increased from 1.2rem */
+    }
+
+    .security-info p {
+        color: #ccc;
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;  /* Increased */
+    }
+
+    .score-text {
+        color: #00ff99;
+        font-weight: bold;
+        font-size: 1.25rem;  /* Increased from 1rem */
+        z-index: 1;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        font-family: 'Poppins', sans-serif;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1.35rem;  /* Increased */
+        display: inline-block;
+    }
+
+    .btn-report {
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        color: #000;
+    }
+
+    .btn-new-transaction {
+        background: transparent;
+        border: 2px solid #00ff99;
+        color: #00ff99;
+    }
+
+    .btn-dashboard {
+        background: linear-gradient(45deg, #6c63ff, #8b80ff);
+        color: #fff;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 153, 0.4);
+    }
+
+    .report-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(15, 15, 15, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
+        z-index: 1000;
+        overflow-y: auto;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .report-content {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        max-width: 900px;  /* Increased from 800px */
+        width: 90%;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 60px rgba(0, 255, 153, 0.3);
+    }
+
+    .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #00ffcc;
+        padding-bottom: 1rem;
+    }
+
+    .report-title {
+        font-family: 'Poppins', sans-serif;
+        color: #00ff99;
+        font-size: 2.2rem;  /* Increased from 2rem */
+        font-weight: 600;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        font-size: 2rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+        color: #ff8e8e;
+    }
+
+    .report-section {
+        margin-bottom: 2rem;
+        padding: 2.5rem;
+        background: rgba(15, 14, 45, 0.95);
+        border-radius: 15px;
+        border: 2px solid rgba(108, 99, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(108, 99, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .report-section:hover {
+        box-shadow: 0 12px 40px rgba(108, 99, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .report-section.suspicious {
+        border: 2px solid rgba(255, 107, 107, 0.3);
+        box-shadow: 0 8px 32px rgba(255, 107, 107, 0.1);
+    }
+
+    .report-section.suspicious:hover {
+        box-shadow: 0 12px 40px rgba(255, 107, 107, 0.2);
+    }
+
+    .report-section h4 {
+        color: #6c63ff;
+        margin-bottom: 1.5rem;
+        font-size: 1.6rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .report-section h4 i {
+        font-size: 1.4rem;
+    }
+
+    .report-data {
+        color: #e0e0e0;
+        line-height: 1.8;
+        font-size: 1.3rem;
+    }
+
+    .report-data p {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: rgba(108, 99, 255, 0.05);
+        border-radius: 8px;
+        border-left: 3px solid #6c63ff;
+    }
+
+    .report-section.suspicious .report-data p {
+        background: rgba(255, 107, 107, 0.05);
+        border-left: 3px solid #ff6b6b;
+    }
+
+    .report-data pre {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+        border-radius: 5px;
+        overflow-x: auto;
+        color: #00ff99;
+        font-family: 'Courier New', monospace;
+        font-size: 1.25rem;  /* Increased */
+    }
+
+    .report-data ul {
+        margin: 0.75rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .report-data li {
+        color: #ff6b6b;
+        margin-bottom: 0.25rem;
+        font-size: 1.3rem;  /* Increased */
+    }
+
+    /* Add styles for suspicious transactions */
+    .results-card.suspicious {
+        border: 6px solid rgba(255, 107, 107, 0.3);
+        box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+        animation: dangerGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes dangerGlow {
+        from { box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3); }
+        to { box-shadow: 0 25px 80px rgba(255, 107, 107, 0.5); }
+    }
+
+    .warning-icon .fas {
+        font-size: 5rem;
+        background: linear-gradient(45deg, #ff6b6b, #ffd166);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-right: 0;
+    }
+
+    .warning-title {
+        background: linear-gradient(45deg, #ff6b6b, #ffd166);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .security-info.suspicious {
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .security-info.suspicious h4 {
+        color: #ff6b6b;
+    }
+
+    .text-warning {
+        color: #ffd166;
+    }
+
+    .text-danger {
+        color: #ff6b6b;
+    }
+
+    .btn-verify {
+        background: linear-gradient(45deg, #ff6b6b, #ffd166);
+        color: #000;
+    }
+
+    .btn-verify:hover {
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Updated security score display for suspicious transactions */
+    .risk-score-container {
+        background: rgba(15, 14, 45, 0.95);
+        border: 2px dashed rgba(255, 107, 107, 0.5);
+        border-radius: 15px;
+        padding: 2.5rem;
+        margin: 2rem 0;
+        text-align: center;
+        position: relative;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .risk-score {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .score-number {
+        font-size: 6rem;
+        font-weight: bold;
+        line-height: 1;
+        margin-bottom: 1rem;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(45deg, #ff4d4d, #ff9999);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 10px rgba(255, 77, 77, 0.3);
+    }
+
+    .risk-level {
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #ff4d4d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Poppins', sans-serif;
+        margin-top: 0.5rem;
+        text-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .results-card {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .success-title {
+            font-size: 2.2rem;
+        }
+
+        .success-message {
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            font-size: 1.25rem;  /* Increased for mobile */
+            padding: 1rem 2rem;
+        }
+
+        .report-data {
+            font-size: 1.2rem;  /* Increased for mobile */
+        }
+    }
+</style>
+
+<div class="results-container">
+    <div class="results-card {% if fraud_report.final_prediction == 1 %}suspicious{% endif %}">
+        {% if fraud_report.final_prediction == 1 %}
+            <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h1 class="warning-title">Suspicious Activity Detected</h1>
+            <p class="success-message">
+                Our AI-powered fraud detection system has identified potential security risks in this transaction. 
+                Additional verification is required to ensure your safety.
+            </p>
+        {% else %}
+            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+            <h1 class="success-title">Transaction Successful!</h1>
+            <p class="success-message">
+                Your transaction has been processed successfully. Our multi-layered AI fraud detection system verified the transaction as legitimate and safe.
+            </p>
+        {% endif %}
+
+        {% if transaction_data %}
+        <div class="transaction-summary">
+            <h3>
+                {% if fraud_report.final_score > 0.7 %}
+                    <i class="fas fa-exclamation-circle"></i>
+                {% else %}
+                    <i class="fas fa-credit-card"></i>
+                {% endif %}
+                Transaction Summary
+            </h3>
+            <div class="summary-row">
+                <span class="summary-label">Transaction ID:</span>
+                <span class="summary-value">#{{ transaction_data.get('transaction_id', 'N/A') }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Amount:</span>
+                <span class="summary-value">{{ "%.2f"|format(transaction_data.get('amount', 0)) }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Recipient:</span>
+                <span class="summary-value">{{ transaction_data.get('to_account', 'N/A') }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">Date & Time:</span>
+                <span class="summary-value">{{ transaction_data.get('timestamp', 'N/A') }}</span>
+            </div>
+            {% if not fraud_report.final_prediction == 1 %}
+            <div class="summary-row">
+                <span class="summary-label">Status:</span>
+                <span class="summary-value"><i class="fas fa-check-circle"></i> Completed</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if fraud_report %}
+        <div class="security-info {% if fraud_report.final_score > 0.7 %}suspicious{% endif %}">
+            <h4>
+                <i class="fas {% if fraud_report.final_prediction == 1 %}fa-shield-exclamation{% else %}fa-shield-alt{% endif %}"></i>
+                Security Analysis - 
+                {% if fraud_report.final_prediction == 1 %}
+                    Suspicious Activity Detected
+                {% else %}
+                    Transaction Verified Clean
+                {% endif %}
+            </h4>
+            <div class="risk-score-container {% if fraud_report.final_score > 0.7 %}suspicious{% endif %}">
+                <div class="risk-score">
+                    <div class="score-number">{{ "%.0f"|format(fraud_report.final_score * 100) }}</div>
+                    <div class="risk-level">Risk Score</div>
+                </div>
+            </div>
+
+            {% if fraud_report.final_prediction == 1 %}
+                {% if fraud_report.rules_triggered %}
+                <div class="alert-section">
+                    <p><i class="fas fa-exclamation-circle text-danger"></i> <strong>Security Alerts:</strong></p>
+                    <ul>
+                        {% for rule in fraud_report.rules_triggered %}
+                        <li>{{ rule }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                {% if fraud_report.layer2_rules_triggered %}
+                <div class="alert-section">
+                    <p><i class="fas fa-exclamation-triangle text-warning"></i> <strong>Additional Risk Factors:</strong></p>
+                    <ul>
+                        {% for rule in fraud_report.layer2_rules_triggered %}
+                        <li>{{ rule }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            {% else %}
+                {% if fraud_report.final_prediction == 1 %}
+                <p><i class="fas fa-times text-danger"></i> Suspicious patterns detected</p>
+                <p><i class="fas fa-times text-danger"></i> Global model risk score: {{ "%.2f"|format(fraud_report.global_score * 100) }}%</p>
+                <p><i class="fas fa-times text-danger"></i> Heuristic risk score: {{ "%.2f"|format(fraud_report.layer2_score * 100) }}%</p>
+                <p><i class="fas fa-times text-danger"></i> Rule-based risk score: {{ "%.2f"|format(fraud_report.layer3_score * 100) }}%</p>
+                {% else %}
+                <p><i class="fas fa-check text-success"></i> No suspicious patterns detected by any layer</p>
+                <p><i class="fas fa-check text-success"></i> Global model: Normal transaction pattern (Score: {{ "%.2f"|format(fraud_report.global_score * 100) }}%)</p>
+                <p><i class="fas fa-check text-success"></i> Heuristics analysis: No red flags (Score: {{ "%.2f"|format(fraud_report.layer2_score * 100) }}%)</p>
+                <p><i class="fas fa-check text-success"></i> Rule-based analysis: Behavior matches your profile (Score: {{ "%.2f"|format(fraud_report.layer3_score * 100) }}%)</p>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="btn-group">
+            {% if fraud_report %}
+                {% if fraud_report.final_prediction == 1 %}
+                    <form action="/transaction/auth/step-up" method="POST">
+                        <input type="hidden" name="transaction_data" value="{{ transaction_json }}">
+                        <button type="submit" class="btn btn-verify">
+                            <i class="fas fa-shield-check"></i> Complete Verification
+                        </button>
+                    </form>
+                {% endif %}
+                <button class="btn btn-report" onclick="showReport()">
+                    <i class="fas fa-chart-line"></i> View Security Report
+                </button>
+            {% endif %}
+            <a href="/services/make-transaction" class="btn btn-new-transaction">
+                <i class="fas fa-plus-circle"></i> New Transaction
+            </a>
+            <a href="/dashboard" class="btn btn-dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+{% if fraud_report %}
+<div id="reportModal" class="report-modal">
+    <div class="report-content {% if fraud_report.final_prediction == 1 %}suspicious{% endif %}">
+        <div class="report-header">
+            <h2 class="report-title">
+                <i class="fas {% if fraud_report.final_prediction == 1 %}fa-exclamation-triangle{% else %}fa-search{% endif %}"></i>
+                Transaction Security Report - 
+                {% if fraud_report.final_prediction == 1 %}
+                    Suspicious Activity Detected
+                {% else %}
+                    Clean Transaction
+                {% endif %}
+            </h2>
+            <button class="close-btn" onclick="hideReport()">&times;</button>
+        </div>
+
+        <div class="report-section">
+            <h4>
+                {% if fraud_report.final_prediction == 1 %}
+                    <i class="fas fa-exclamation-triangle"></i> Overall Analysis - Suspicious Activity
+                {% else %}
+                    <i class="fas fa-check-circle"></i> Overall Analysis - Transaction Approved
+                {% endif %}
+            </h4>
+            <div class="report-data">
+                <p><strong>Final Prediction:</strong> 
+                    {% if fraud_report.final_prediction == 1 %}
+                        <span class="text-danger">⚠️ Suspicious Activity Detected</span>
+                    {% else %}
+                        <span style="color: #00ff99;">✅ No Fraud Detected</span>
+                    {% endif %}
+                </p>
+                <p><strong>Risk Score:</strong> {{ "%.2f"|format(fraud_report.final_score * 100) }}%</p>
+                <p><strong>Status:</strong> 
+                    {% if fraud_report.final_prediction == 1 %}
+                        <span class="text-danger">Pending Additional Verification</span>
+                    {% else %}
+                        <span style="color: #00ff99;">Transaction Processed Successfully</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="report-section {% if fraud_report.final_prediction == 1 %}suspicious{% endif %}">
+            <h4><i class="fas fa-brain"></i> Layer 1: Global AI Model Analysis</h4>
+            <div class="report-data">
+                <p><strong>Global Score:</strong> {{ "%.2f"|format(fraud_report.global_score * 100) }}%</p>
+                <p><strong>Model Type:</strong> Random Forest (Trained on global dataset)</p>
+                <p><strong>Purpose:</strong> Detects common fraud patterns across all users</p>
+            </div>
+        </div>
+
+        <div class="report-section {% if fraud_report.final_prediction == 1 %}suspicious{% endif %}">
+            <h4><i class="fas fa-chart-network"></i> Layer 2: Behavioral Analysis</h4>
+            <div class="report-data">
+                <p><strong>Risk Score:</strong> {{ "%.2f"|format(fraud_report.layer2_score * 100) }}%</p>
+                <p><strong>Model Type:</strong> Real-time heuristics and behavioral analysis</p>
+                <p><strong>Purpose:</strong> Checks for immediate suspicious patterns and behaviors</p>
+                {% if fraud_report.layer2_rules_triggered %}
+                <p><strong>Rules Triggered:</strong></p>
+                <ul>
+                    {% for rule in fraud_report.layer2_rules_triggered %}
+                    <li>{{ rule }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h4><i class="fas fa-fingerprint"></i> Layer 3: Personal Profile Analysis</h4>
+            <div class="report-data">
+                <p><strong>Risk Score:</strong> {{ "%.2f"|format(fraud_report.layer3_score * 100) }}%</p>
+                <p><strong>Local Anomaly Detected:</strong> {{ "Yes" if fraud_report.local_layer_pred else "No" }}</p>
+                <p><strong>Model Type:</strong> Rule-based behavioral analysis</p>
+                <p><strong>Purpose:</strong> Checks for unusual patterns in your personal transaction behavior</p>
+                {% if fraud_report.rules_triggered %}
+                <p><strong>Rules Triggered:</strong></p>
+                <ul>
+                    {% for rule in fraud_report.rules_triggered %}
+                    <li>{{ rule }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h4><i class="fas fa-cogs"></i> Technical Details</h4>
+            <div class="report-data">
+                <pre>{{ fraud_report | tojson(indent=2) }}</pre>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <button class="btn btn-new-transaction" onclick="hideReport()">Close Report</button>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    function showReport() {
+        document.getElementById('reportModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideReport() {
+        document.getElementById('reportModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('reportModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideReport();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideReport();
+        }
+    });
+
+    // Animate the security score circle
+    const scoreCircle = document.querySelector('.score-circle');
+    if (scoreCircle) {
+        setTimeout(() => {
+            scoreCircle.style.transition = 'background 1s ease-in-out';
+        }, 500);
+    }
+</script>
+
+{% endblock %}

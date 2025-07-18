@@ -1,0 +1,568 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+        min-height: 100vh;
+        padding: 2rem;
+        padding-top: calc(75px + 2rem); /* Account for navbar height */
+        font-family: 'Poppins', sans-serif;
+        background: rgba(15, 15, 15, 0.97);
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
+
+    .transactions-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 4px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        animation: glow 2s ease-in-out infinite alternate;
+        margin: 0 auto;
+        max-width: 1800px; /* Increased from 1200px */
+        overflow-x: auto;
+        width: 95%; /* Added to ensure some margin from edges */
+    }
+
+    @keyframes glow {
+        from { box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+        to { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+    }
+
+    .transactions-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        color: #fff;
+    }
+
+    .transactions-table th {
+        background: rgba(0, 255, 204, 0.1);
+        color: #00ffcc;
+        font-size: 1.25rem;
+        font-weight: 600;
+        padding: 1.2rem 1.5rem;
+        text-align: left;
+        border-bottom: 2px solid rgba(0, 255, 204, 0.2);
+        white-space: nowrap;
+    }
+
+    .transactions-table td {
+        padding: 1.2rem 1.5rem;
+        font-size: 1.2rem;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+    }
+
+    .transactions-table tr:hover {
+        background: rgba(0, 255, 204, 0.05);
+    }
+
+    .amount {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .status-safe {
+        background: rgba(0, 255, 128, 0.1);
+        color: #00ff80;
+        border: 1px solid rgba(0, 255, 128, 0.3);
+    }
+
+    .status-fraud {
+        background: rgba(255, 71, 87, 0.1);
+        color: #ff4757;
+        border: 1px solid rgba(255, 71, 87, 0.3);
+    }
+
+    .status-warning {
+        background: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+
+    .status-neutral {
+        background: rgba(108, 117, 125, 0.1);
+        color: #6c757d;
+        border: 1px solid rgba(108, 117, 125, 0.3);
+    }
+
+    .transaction-type {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        background: rgba(0, 255, 204, 0.1);
+        color: #00ffcc;
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        white-space: nowrap;
+    }
+    
+    /* Add horizontal spacing between columns */
+    .transactions-table th:not(:last-child),
+    .transactions-table td:not(:last-child) {
+        padding-right: 2rem;
+    }
+
+    /* Style for location and coordinates */
+    .location-data {
+        white-space: nowrap;
+        color: #ccc;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #ccc;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #00ffcc;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .new-transaction-btn {
+        display: inline-block;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        color: #000;
+        text-decoration: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .new-transaction-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    /* Add some spacing between the two tables */
+    .url-scans-card {
+        margin-top: 3rem;
+    }
+
+    .feature-value .status-badge {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.8rem;
+        min-width: 70px;
+        text-align: center;
+        display: inline-block;
+    }
+
+    /* Make the URL column wider */
+    .transactions-table td:nth-child(2) {
+        min-width: 250px;
+        max-width: 300px;
+    }
+
+    /* Make other columns more compact */
+    .transactions-table td:not(:nth-child(2)) {
+        white-space: nowrap;
+    }
+
+    /* Add horizontal dividers between groups of related columns */
+    .transactions-table th:nth-child(3),
+    .transactions-table th:nth-child(7),
+    .transactions-table th:nth-child(9),
+    .transactions-table th:nth-child(12),
+    .transactions-table td:nth-child(3),
+    .transactions-table td:nth-child(7),
+    .transactions-table td:nth-child(9),
+    .transactions-table td:nth-child(12) {
+        border-left: 1px solid rgba(0, 255, 204, 0.1);
+    }
+
+    /* Add tooltips for feature explanations */
+    .transactions-table th {
+        position: relative;
+        cursor: help;
+    }
+
+    .transactions-table th:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        z-index: 1000;
+    }
+
+    /* Style for long text cells */
+    .transactions-table td[style*="max-width"] {
+        position: relative;
+    }
+
+    .transactions-table td[style*="max-width"]:hover::after {
+        content: attr(title);
+        position: absolute;
+        left: 0;
+        top: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        white-space: normal;
+        max-width: 300px;
+        z-index: 1000;
+        word-wrap: break-word;
+    }
+
+    /* Adjust spacing for customer care table */
+    .transactions-table th[data-tooltip] {
+        padding: 1rem 1.2rem;
+        font-size: 1.1rem;
+    }
+
+    /* Make risk score more prominent */
+    .risk-score {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .transactions-table {
+            font-size: 0.9rem;
+        }
+
+        .transactions-table th,
+        .transactions-table td {
+            padding: 0.8rem;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+        }
+
+        .feature-value .status-badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+            min-width: 60px;
+        }
+
+        .phone-number {
+            font-size: 0.9rem;
+            letter-spacing: normal;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">💳 Transaction History</h1>
+    </div>
+
+    <div class="transactions-card">
+        {% if transactions %}
+        <div style="overflow-x: auto;">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Payment Mode</th>
+                        <th>Beneficiary</th>
+                        <th>Location</th>
+                        <th>IP Address</th>
+                        <th>Coordinates</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td class="amount">₹{{ "{:,.2f}".format(transaction.amount) }}</td>
+                        <td><span class="transaction-type">{{ transaction.transaction_type }}</span></td>
+                        <td>{{ transaction.payment_instrument }}</td>
+                        <td>{{ transaction.beneficiary_vpa }}</td>
+                        <td class="location-data">{{ transaction.city }}, {{ transaction.country }}</td>
+                        <td class="location-data">{{ transaction.ip_address }}</td>
+                        <td class="location-data">{{ transaction.latitude }}, {{ transaction.longitude }}</td>
+                        <td>
+                            {% if transaction.is_fraud %}
+                            <span class="status-badge status-fraud">Suspicious</span>
+                            {% else %}
+                            <span class="status-badge status-safe">Safe</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fa-duotone fa-credit-card fa-bounce" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+            <p>No transactions found</p>
+            <a href="/transaction" class="new-transaction-btn">Make Your First Transaction</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">🔍 URL Scan History</h1>
+    </div>
+
+    <div class="transactions-card url-scans-card">
+        {% if url_scans %}
+        <div style="overflow-x: auto;">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>URL</th>
+                        <th>IP in URL</th>
+                        <th>URL Length</th>
+                        <th>Shortening</th>
+                        <th>@ Symbol</th>
+                        <th>Domain Age</th>
+                        <th>Web Traffic</th>
+                        <th>Page Rank</th>
+                        <th>Right Click</th>
+                        <th>Mouse Events</th>
+                        <th>Hidden Form</th>
+                        <th>SSL Status</th>
+                        <th>DNS Record</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scan in url_scans %}
+                    <tr>
+                        <td>{{ scan.scanned_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {{ scan.url }}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.having_ip_address == -1 %}
+                            <span class="status-badge status-safe">No</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Yes</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.url_length == -1 %}
+                            <span class="status-badge status-safe">Short</span>
+                            {% elif scan.url_length == 0 %}
+                            <span class="status-badge status-safe">Medium</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Long</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.shortening_service == -1 %}
+                            <span class="status-badge status-safe">No</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Yes</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.having_at_symbol == -1 %}
+                            <span class="status-badge status-safe">No</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Yes</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.age_of_domain == 1 %}
+                            <span class="status-badge status-safe">Old</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">New</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.web_traffic == 1 %}
+                            <span class="status-badge status-safe">High</span>
+                            {% elif scan.web_traffic == 0 %}
+                            <span class="status-badge status-safe">Medium</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Low</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.page_rank == 1 %}
+                            <span class="status-badge status-safe">High</span>
+                            {% elif scan.page_rank == 0 %}
+                            <span class="status-badge status-safe">Medium</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Low</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.right_click_disabled == 1 %}
+                            <span class="status-badge status-safe">Enabled</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Disabled</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.on_mouseover == 1 %}
+                            <span class="status-badge status-safe">Safe</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Suspicious</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.sfh == 1 %}
+                            <span class="status-badge status-safe">Safe</span>
+                            {% elif scan.sfh == 0 %}
+                            <span class="status-badge status-warning">Suspicious</span>
+                            {% elif scan.sfh == -1 %}
+                            <span class="status-badge status-fraud">Phishing</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.ssl_final_state == 1 %}
+                            <span class="status-badge status-safe">Valid</span>
+                            {% elif scan.ssl_final_state == 0 %}
+                            <span class="status-badge status-fraud">Issues</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">None</span>
+                            {% endif %}
+                        </td>
+                        <td class="feature-value">
+                            {% if scan.dns_record == 1 %}
+                            <span class="status-badge status-safe">Valid</span>
+                            {% else %}
+                            <span class="status-badge status-fraud">Missing</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if scan.is_phishing %}
+                            <span class="status-badge status-fraud">Phishing</span>
+                            {% else %}
+                            <span class="status-badge status-safe">Safe</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fa-duotone fa-shield-check fa-bounce" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+            <p>No URL scans found</p>
+            <a href="/services/url" class="new-transaction-btn">Scan Your First URL</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">📞 Customer Care Verification History</h1>
+    </div>
+
+    <div class="transactions-card">
+        {% if customer_care_records %}
+        <div style="overflow-x: auto;">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th data-tooltip="Date of verification">Date</th>
+                        <th data-tooltip="Name of the company">Company</th>
+                        <th data-tooltip="Phone number verified">Phone Number</th>
+                        <th data-tooltip="Risk score from 0-100">Risk Score</th>
+                        <th data-tooltip="Overall risk assessment">Risk Level</th>
+                        <th data-tooltip="Region of the phone number">Region</th>
+                        <th data-tooltip="Service carrier of the number">Carrier</th>
+                        <th data-tooltip="Number type">Line Type</th>
+                        <th data-tooltip="Country data">Country</th>
+                        <th data-tooltip="Number of sources found">Sources</th>
+                        <th data-tooltip="Recommended action">Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in customer_care_records %}
+                    {% set enhanced = record.enhanced_info | default('{}') | from_json %}
+                    {% set basic_info = enhanced.get('basic_info', {}) %}
+                    {% set numverify = enhanced.get('numverify_info', {}) %}
+                    <tr>
+                        <td>{{ record.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            {{ record.company_name }}
+                        </td>
+                        <td class="phone-number">{{ record.phone_number }}</td>
+                        <td class="feature-value">
+                            <span class="status-badge {% if record.risk_score < 30 %}status-safe{% elif record.risk_score < 70 %}status-warning{% else %}status-fraud{% endif %}">
+                                {{ record.risk_score }}
+                            </span>
+                        </td>
+                        <td class="feature-value">
+                            <span class="status-badge {% if record.risk_level.lower() == 'low' %}status-safe{% elif record.risk_level.lower() == 'medium' %}status-warning{% else %}status-fraud{% endif %}">
+                                {{ record.risk_level }}
+                            </span>
+                        </td>
+                        <td class="feature-value">
+                            <span class="status-badge status-neutral">{{ basic_info.get('region', 'Unknown') }}</span>
+                        </td>
+                        <td class="feature-value">
+                            <span class="status-badge status-neutral">{{ basic_info.get('carrier', numverify.get('carrier', 'Unknown')) }}</span>
+                        </td>
+                        <td class="feature-value">
+                            <span class="status-badge {% if numverify.get('line_type') in ['landline', 'toll_free'] %}status-safe{% else %}status-neutral{% endif %}">
+                                {{ numverify.get('line_type', 'Unknown') | title }}
+                            </span>
+                        </td>
+                        <td class="feature-value">
+                            <span class="status-badge status-neutral">{{ numverify.get('country_name', basic_info.get('region', 'Unknown')) }}</span>
+                        </td>
+                        <td class="feature-value">
+                            <span class="status-badge {% if record.numbers_found_in_sources > 5 %}status-safe{% elif record.numbers_found_in_sources > 2 %}status-warning{% else %}status-fraud{% endif %}">
+                                {{ record.numbers_found_in_sources }}
+                            </span>
+                        </td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ record.recommendation }}">
+                            {{ record.recommendation }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fa-duotone fa-phone-office fa-bounce" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>
+            <p>No customer care verifications found</p>
+            <a href="/services/customer_care" class="new-transaction-btn">Verify Your First Number</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

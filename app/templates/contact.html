@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .email-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem 2rem 2rem 2rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .email-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 3px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 3.5rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        max-width: 800px;
+        width: 100%;
+    }
+
+    .email-title {
+        color: #00ffcc;
+        font-size: 3rem;
+        margin-bottom: 1.8rem;
+        font-weight: 600;
+    }
+
+    .contact-description {
+        color: #ffffff;
+        font-size: 1.3rem;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+
+    .team-section {
+        margin: 2rem 0;
+        padding: 2rem;
+        background: rgba(0, 255, 204, 0.05);
+        border-radius: 15px;
+    }
+
+    .team-member {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-5px);
+    }
+
+    .member-info {
+        text-align: left;
+        margin-left: 1rem;
+    }
+
+    .member-name {
+        color: #00ffcc;
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .email-address {
+        color: #fff;
+        font-size: 1.2rem;
+        margin: 0.3rem 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .social-links {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: flex-start;
+        gap: 1.5rem;
+    }
+
+    .social-link {
+        color: #00ffcc;
+        font-size: 1.8rem;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-link:hover {
+        transform: translateY(-3px);
+        color: #fff;
+    }
+
+    .icon {
+        margin-right: 0.8rem;
+        color: #00ffcc;
+        font-size: 1.2rem;
+    }
+</style>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="email-container">
+    <div class="email-card">
+        <h1 class="email-title">Get in Touch</h1>
+        <p class="contact-description">
+            Have questions about CipherStorm? Learn more about CipherStorm and get the information you need.
+        </p>
+
+        <div class="team-section">
+            <div class="team-member">
+                <div class="member-info">
+                    <h3 class="member-name">Ankit Kumar</h3>
+                    <p class="email-address">
+                        <i class="fas fa-envelope icon"></i>
+                        ankitkr1801@gmail.com
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/ankitkr9911" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ankit-kumar-824a122ab/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <div class="member-info">
+                    <h3 class="member-name">Dheeraj Sahu</h3>
+                    <p class="email-address">
+                        <i class="fas fa-envelope icon"></i>
+                        dheerajsahu9943@gmail.com
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/dheeraj-sahu" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/dheerajsahu/" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .text-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+    .text-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        min-height: 500px;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .text-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+    }
+
+    .text-description {
+        color: #ccc;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        line-height: 1.6;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: block;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        font-family: 'Poppins', sans-serif;
+        height: 55px;
+        font-size: 1.1rem;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        padding: 0 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: rgba(0, 255, 204, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        outline: none;
+    }
+
+    .btn-submit {
+        font-family: 'Poppins', sans-serif;
+        height: 58px;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        width: 100%;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 255, 204, 0.2);
+    }
+
+    .feature-item {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: all 0.3s ease;
+        gap: 1rem;
+    }
+
+    .feature-item:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+        transform: translateY(-3px);
+    }
+
+    .feature-icon {
+        color: #00ffcc;
+        font-size: 2rem;
+        background: rgba(0, 255, 204, 0.1);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        background: rgba(0, 255, 204, 0.2);
+        transform: scale(1.1);
+    }
+
+    .feature-text {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 15, 15, 0.95);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .loading-spinner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid rgba(0, 255, 204, 0.1);
+        border-left-color: #00ffcc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-overlay h4 {
+        color: #00ffcc;
+        margin: 1.5rem 0 0.5rem;
+        font-weight: 600;
+        font-size: 1.4rem;
+    }
+
+    .loading-overlay .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="text-container">
+    <div class="text-card">
+        <h1 class="text-title">URL Security Scanner</h1>
+        <p class="text-description">Protect yourself from phishing attacks and malicious websites. Enter any URL below to analyze its security and legitimacy in real-time.</p>
+
+        <form id="urlForm" method="POST" action="/url/scan">
+            <div class="form-group">
+                <label for="url" class="form-label">URL to Analyze</label>
+                <input type="url" class="form-control" id="url" name="url" 
+                       placeholder="Enter URL (e.g., https://example.com)"
+                       required pattern="https?://.*">
+            </div>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-shield-alt me-2"></i>Scan URL
+            </button>
+        </form>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <i class="fas fa-fingerprint feature-icon"></i>
+                <span class="feature-text">Advanced Phishing Detection</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-certificate feature-icon"></i>
+                <span class="feature-text">SSL Security Analysis</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-clock-rotate-left feature-icon"></i>
+                <span class="feature-text">Domain History Check</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <span class="feature-text">Traffic Pattern Analysis</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-shield-halved feature-icon"></i>
+                <span class="feature-text">Real-time Threat Detection</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-user-shield feature-icon"></i>
+                <span class="feature-text">Identity Safeguard</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="text-center">
+        <div class="loading-spinner"></div>
+        <h4>Analyzing URL Security</h4>
+        <p class="text-muted">Please wait while we perform comprehensive security checks</p>
+    </div>
+</div>
+
+<script>
+document.getElementById('urlForm').addEventListener('submit', function(e) {
+    document.getElementById('loadingOverlay').classList.add('active');
+});
+</script>
+{% endblock %}

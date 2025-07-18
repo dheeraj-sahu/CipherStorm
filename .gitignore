@@ -1,0 +1,46 @@
+# ---- Python Cache ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.pkl/
+
+# ---- Environment ----
+.env
+myenv/
+venv/
+env/
+
+# ---- Databases ----
+*.db
+
+# ---- CSV & Data ----
+*.csv
+
+# ---- Audio Uploads (optional) ----
+uploads/audio/
+uploads/*.wav
+uploads/*.mp3
+
+# ---- Machine Learning Model Files ----
+app/ml_models/*.pkl
+app/ml_models/fine_tuned_bert/
+
+# ---- Alembic Migrations ----
+alembic/__pycache__/
+alembic/versions/*.pyc
+
+# ---- IDE Configs ----
+.vscode/
+.idea/
+
+# ---- OS Junk ----
+.DS_Store
+Thumbs.db
+
+# ---- Logs and Misc ----
+*.log
+*.tmp
+*.bak
+.ipynb_checkpoints

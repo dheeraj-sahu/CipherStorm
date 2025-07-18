@@ -1,0 +1,227 @@
+<!-- app/templates/components/navbar.html -->
+<nav class="navbar">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    /* Navbar container */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(13, 17, 23, 0.95);
+      padding: 12px 40px;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 75px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.1);
+    }
+
+    /* Brand/logo */
+    .navbar .brand {
+      font-size: 1.8rem;
+      font-weight: 600;
+      background: linear-gradient(45deg, #00ff99, #00ffcc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    /* Navigation links */
+    .nav-links {
+      display: flex;
+      gap: 35px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 1.25rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .nav-links a:hover {
+      color: #00ff99;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(45deg, #00ff99, #00ffcc);
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Auth and profile */
+    .nav-auth {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .nav-auth .btn {
+      border: 2px solid rgba(0, 255, 204, 0.3);
+      background: rgba(0, 255, 153, 0.1);
+      color: #00ff99;
+      padding: 10px 25px;
+      text-decoration: none;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .nav-auth .btn:hover {
+      background: linear-gradient(45deg, #00ff99, #00ffcc);
+      border-color: transparent;
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 153, 0.3);
+    }
+    .nav-auth .signup {
+      background: linear-gradient(45deg, #00ff99, #00ffcc);
+      border: none;
+      color: #000;
+    }
+    .nav-auth .signup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 153, 0.4);
+    }
+
+    /* Profile menu container */
+    .profile-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Icon styling */
+    .profile-menu .icon {
+      font-size: 24px;
+      padding: 10px 20px;
+      background: rgba(31, 41, 55, 0.5);
+      border: 2px solid rgba(0, 255, 204, 0.3);
+      border-radius: 25px;
+      color: #00ff99;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .profile-menu .icon:hover {
+      background: rgba(0, 255, 153, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 153, 0.2);
+    }
+
+    /* Dropdown menu, hidden by default */
+    .profile-menu .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: rgba(22, 27, 34, 0.95);
+      border: 2px solid rgba(0, 255, 204, 0.3);
+      border-radius: 15px;
+      min-width: 180px;
+      padding: 10px 0;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Show when active class is present */
+    .profile-menu.active .dropdown {
+      display: block;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Dropdown items */
+    .profile-menu .dropdown li {
+      list-style: none;
+    }
+    .profile-menu .dropdown a {
+      display: block;
+      padding: 12px 20px;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 1.15rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .profile-menu .dropdown a:hover {
+      background: rgba(0, 255, 153, 0.1);
+      color: #00ff99;
+      padding-left: 25px;
+    }
+  </style>
+
+  <!-- Brand -->
+  <a class="brand" href="/">CIPHERSTORM</a>
+
+  <!-- Main links -->
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/features">Features</a></li>
+    <li><a href="/services">Services</a></li>
+    <li><a href="/contact">Contact</a></li>
+    {% if user %}
+
+    {% endif %}
+  </ul>
+
+  <!-- Auth / Profile -->
+  <div class="nav-auth">
+    {% if user %}
+      <div class="profile-menu" id="profileMenu">
+        <span class="icon">👤</span>
+        <ul class="dropdown">
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/profile/my_profile">My Profile</a></li>
+          <li><a href="/edit/user">Account</a></li>
+
+          <li><a href="/auth/logout">Logout</a></li>
+          
+        </ul>
+      </div>
+    {% else %}
+      <a href="/auth/signup" class="btn signup">Sign Up</a>
+      <a href="/auth/login" class="btn login">Login</a>
+    {% endif %}
+  </div>
+
+  <!-- Toggle Dropdown via JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const profileMenu = document.getElementById('profileMenu');
+      if (profileMenu) {
+        profileMenu.addEventListener('click', function(e) {
+          e.stopPropagation();
+          this.classList.toggle('active');
+        });
+        document.addEventListener('click', function(e) {
+          if (!profileMenu.contains(e.target)) {
+            profileMenu.classList.remove('active');
+          }
+        });
+      }
+    });
+  </script>
+</nav>

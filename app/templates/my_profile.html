@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(15, 15, 15, 0.97);
+        padding: 2rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 4px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 900px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+        from { box-shadow: 0 0 20px rgba(0, 255, 204, 0.3); }
+        to { box-shadow: 0 0 30px rgba(0, 255, 204, 0.5); }
+    }
+
+    .auth-heading {
+        color: #00ffcc;
+        font-size: 2.5rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 2rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .auth-error {
+        background: rgba(255, 0, 0, 0.1);
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        color: #ff3333;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .profile-details {
+        background: rgba(0, 255, 204, 0.05);
+        border: 2px solid rgba(0, 255, 204, 0.2);
+        border-radius: 15px;
+        padding: 1.5rem 2.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+    }
+
+    .profile-item:last-child {
+        border-bottom: none;
+    }
+
+    .profile-label {
+        color: #00ffcc;
+        font-size: 1.4rem;
+        font-weight: 500;
+        flex: 0 0 35%;
+    }
+
+    .profile-value {
+        color: #fff;
+        font-size: 1.4rem;
+        flex: 0 0 60%;
+        text-align: right;
+    }
+
+    .profile-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .auth-button {
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        color: #000;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    .auth-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .auth-link a {
+        color: #00ffcc;
+        text-decoration: none;
+        font-size: 1.3rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .auth-link a:hover {
+        color: #00ff99;
+        text-decoration: underline;
+    }
+</style>
+
+<section class="auth-container">
+    <div class="auth-card">
+        <h2 class="auth-heading">👤 My Profile</h2>
+
+    {% if error %}
+      <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+        <div class="profile-details">
+            <div class="profile-item">
+                <span class="profile-label">Full Name:</span>
+                <span class="profile-value">{{ user.full_name }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Mobile Number:</span>
+                <span class="profile-value">{{ user.mobile_no }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">UPI ID:</span>
+                <span class="profile-value">{{ user.upi_id }}</span>
+            </div>
+            {% if user.address %}
+            <div class="profile-item">
+                <span class="profile-label">Address:</span>
+                <span class="profile-value">{{ user.address }}</span>
+            </div>
+            {% endif %}
+            {% if user.transaction_limit is not none %}
+            <div class="profile-item">
+                <span class="profile-label">Transaction Limit:</span>
+                <span class="profile-value">₹{{ user.transaction_limit }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="profile-actions">
+            <a href="/edit/" class="auth-button">Edit Profile</a>
+            <p class="auth-link"><a href="/dashboard">Back to Dashboard</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

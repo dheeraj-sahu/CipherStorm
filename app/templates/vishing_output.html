@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .result-container {
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 4rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .analysis-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .result-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .result-header.suspicious {
+        border: 1px solid rgba(255, 71, 87, 0.3);
+    }
+
+    .result-header.legitimate {
+        border: 1px solid rgba(0, 255, 204, 0.3);
+    }
+
+    .result-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .result-title i {
+        font-size: 2.4rem;
+        margin-right: 1rem;
+    }
+
+    .result-title.suspicious {
+        background: linear-gradient(45deg, #ff4757, #ff6b81);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .result-title.legitimate {
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .confidence-score {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+
+    .transcript-box {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 2rem 0;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    .view-report-btn {
+        font-family: 'Poppins', sans-serif;
+        height: 58px;
+        font-size: 1.2rem;
+        margin: 2rem auto;
+        width: 100%;
+        max-width: 400px;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .view-report-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+
+    .view-report-btn i {
+        font-size: 1.3rem;
+    }
+
+    .details-section {
+        display: none;
+        margin-top: 3rem;
+        transition: all 0.3s ease;
+    }
+
+    .details-section {
+        margin-top: 3rem;
+    }
+
+    .detail-card {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+    .detail-card:hover {
+        border-color: rgba(0, 255, 204, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 255, 204, 0.1);
+    }
+
+    .model-section {
+        margin-bottom: 2.5rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+    }
+
+    .model-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .model-subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 1.5rem 0 1rem;
+        padding-left: 1rem;
+        border-left: 3px solid #00ffcc;
+    }
+
+    .detail-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .score-bar {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 0.8rem 0;
+    }
+
+    .score-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.5s ease;
+    }
+
+    .score-fill.suspicious {
+        background: linear-gradient(90deg, #ff4757, #ff6b81);
+    }
+
+    .score-fill.legitimate {
+        background: linear-gradient(90deg, #00ffcc, #00ff99);
+    }
+
+    .score-label {
+        display: flex;
+        justify-content: space-between;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 1rem 0 0.5rem;
+        font-size: 1rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .metric-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+    }
+
+    .metric-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .metric-item:last-child {
+        border-bottom: none;
+    }
+
+    .metric-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+    }
+
+    .metric-value {
+        color: #00ffcc;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+</style>
+
+<div class="result-container">
+    <div class="analysis-card">
+        {% set is_suspicious = analysis.analysis_result.prediction.label == "Suspicious" %}
+        <div class="result-header {{ 'suspicious' if is_suspicious else 'legitimate' }}">
+            <h1 class="result-title {{ 'suspicious' if is_suspicious else 'legitimate' }}">
+                <i class="fas {{ 'fa-shield-exclamation' if is_suspicious else 'fa-shield-check' }} me-3"></i>
+                {{ analysis.analysis_result.prediction.label }} Call Detected
+            </h1>
+            <div class="confidence-score">
+                Confidence Score: {{ "%.1f"|format(analysis.analysis_result.prediction.score * 100) }}%
+            </div>
+        </div>
+
+        <div class="transcript-box">
+            <h3 class="detail-title">Call Transcript</h3>
+            <p>{{ analysis.recording_info.transcript }}</p>
+        </div>
+
+        <button class="view-report-btn" onclick="toggleDetails()">
+            <i class="fas fa-analytics"></i>View Detailed Report
+        </button>
+
+        <div id="detailsSection" class="details-section">
+            <!-- Model Predictions -->
+            <div class="detail-card">
+                <h3 class="detail-title">Model Predictions</h3>
+                
+                <!-- Groq Ensemble -->
+                <div class="model-section">
+                    <div class="model-subtitle">Groq Ensemble Prediction</div>
+                    {% for label, score in analysis.analysis_result.prediction.details.groq_ensemble.items() %}
+                    <div class="score-label">
+                        <span>{{ label }}</span>
+                        <span>{{ "%.1f"|format(score * 100) }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill {{ label|lower }}" style="width: {{ score * 100 }}%"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Voice Model -->
+                <div class="model-section">
+                    <div class="model-subtitle">Voice Model Analysis</div>
+                    {% for label, score in analysis.analysis_result.prediction.details.voice_model.items() %}
+                    <div class="score-label">
+                        <span>{{ label }}</span>
+                        <span>{{ "%.1f"|format(score * 100) }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill {{ label|lower }}" style="width: {{ score * 100 }}%"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Text Feature Model -->
+                <div class="model-section">
+                    <div class="model-subtitle">Text Feature Model Analysis</div>
+                    {% for label, score in analysis.analysis_result.prediction.details.text_feature_model.items() %}
+                    <div class="score-label">
+                        <span>{{ label }}</span>
+                        <span>{{ "%.1f"|format(score * 100) }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill {{ label|lower }}" style="width: {{ score * 100 }}%"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Final Ensemble -->
+                <div class="model-section">
+                    <div class="model-subtitle">Final Ensemble Prediction</div>
+                    {% for label, score in analysis.analysis_result.prediction.details.ensemble.items() %}
+                    <div class="score-label">
+                        <span>{{ label }}</span>
+                        <span>{{ "%.1f"|format(score * 100) }}%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill {{ label|lower }}" style="width: {{ score * 100 }}%"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Text Analysis Scores -->
+            <div class="detail-card">
+                <h3 class="detail-title">Text Analysis Scores</h3>
+                <div class="metric-list">
+                    {% for key, value in analysis.analysis_result.text_scores.items() %}
+                    <div class="metric-item">
+                        <span class="metric-label">{{ key|replace('_', ' ')|title }}</span>
+                        <span class="metric-value">{{ "%.2f"|format(value) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Voice Features -->
+            <div class="detail-card">
+                <h3 class="detail-title">Voice Analysis Features</h3>
+                <div class="metric-list">
+                    {% set feature_names = [
+                        "Pitch Mean", "Pitch Variance", "Jitter", "Shimmer", 
+                        "Harmonic Ratio", "MFCC 1", "MFCC 2", "MFCC 3", 
+                        "MFCC 4", "MFCC 5", "MFCC 6", "MFCC 7",
+                        "MFCC 8", "MFCC 9", "MFCC 10", "MFCC 11",
+                        "MFCC 12", "MFCC 13"
+                    ] %}
+                    {% for feature, name in analysis.analysis_result.voice_features|zip(feature_names) %}
+                    <div class="metric-item">
+                        <span class="metric-label">{{ name }}</span>
+                        <span class="metric-value">{{ "%.2f"|format(feature) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDetails() {
+        const detailsSection = document.getElementById('detailsSection');
+        const button = document.querySelector('.view-report-btn');
+        
+        if (detailsSection.style.display === 'none' || !detailsSection.style.display) {
+            detailsSection.style.display = 'block';
+            button.innerHTML = '<i class="fas fa-times me-2"></i>Hide Detailed Report';
+        } else {
+            detailsSection.style.display = 'none';
+            button.innerHTML = '<i class="fas fa-chart-bar me-2"></i>View Detailed Report';
+        }
+    }
+</script>
+{% endblock %}

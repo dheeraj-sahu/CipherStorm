@@ -1,0 +1,448 @@
++
+
+
+
+
+
+
+
+
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .text-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .text-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        min-height: 500px;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .text-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .text-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border-radius: 2px;
+    }
+
+    .result-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+
+    .result-header.legitimate {
+        background: rgba(0, 255, 204, 0.1);
+        border: 2px solid rgba(0, 255, 204, 0.3);
+    }
+
+    .result-header.suspicious {
+        background: rgba(255, 59, 48, 0.1);
+        border: 2px solid rgba(255, 59, 48, 0.3);
+    }
+
+    .status-text {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .status-text.legitimate {
+        color: #00ffcc;
+    }
+
+    .status-text.suspicious {
+        color: #ff3b30;
+    }
+
+    .company-details {
+        font-family: 'Poppins', sans-serif;
+        color: #ccc;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation {
+        color: #fff;
+        font-size: 1.1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .section-title {
+        color: #00ffcc;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .detail-subsection {
+        font-family: 'Poppins', sans-serif;
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .detail-subsection:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.05);
+        border-color: rgba(0, 255, 204, 0.3);
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+    .subsection-title {
+        font-family: 'Poppins', sans-serif;
+        color: #00ffcc;
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .subsection-title:before {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 18px;
+        background: linear-gradient(to bottom, #00ffcc, #00ff99);
+        border-radius: 2px;
+        margin-right: 8px;
+    }
+
+    .risk-details-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    .risk-details-list li {
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        animation: slideIn 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    .risk-details-list li:nth-child(1) { animation-delay: 0.1s; }
+    .risk-details-list li:nth-child(2) { animation-delay: 0.2s; }
+    .risk-details-list li:nth-child(3) { animation-delay: 0.3s; }
+    .risk-details-list li:nth-child(4) { animation-delay: 0.4s; }
+    .risk-details-list li:nth-child(5) { animation-delay: 0.5s; }
+
+    .risk-details-list li:hover {
+        background: rgba(0, 255, 204, 0.07);
+        transform: translateY(-2px);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 255, 204, 0.1);
+    }
+
+    .found-numbers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .number-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 1.25rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        position: relative;
+        color: #fff;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    .number-item:nth-child(1) { animation-delay: 0.1s; }
+    .number-item:nth-child(2) { animation-delay: 0.2s; }
+    .number-item:nth-child(3) { animation-delay: 0.3s; }
+    .number-item:nth-child(4) { animation-delay: 0.4s; }
+
+    .number-item:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(0, 255, 204, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 255, 204, 0.05);
+    }
+
+    .number-item.highlight {
+        background: rgba(0, 255, 204, 0.1);
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 255, 204, 0.15);
+    }
+
+    .match-indicator {
+        display: block;
+        font-size: 0.9rem;
+        color: #00ffcc;
+        margin-top: 0.75rem;
+        font-weight: 500;
+    }
+
+    .btn-check-another {
+        font-family: 'Poppins', sans-serif;
+        height: 58px;
+        font-size: 1.2rem;
+        margin-top: 2rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        padding: 0 2.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+
+    .btn-check-another:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 255, 204, 0.2);
+    }
+</style>
+
+<div class="text-container">
+    <div class="text-card">
+        <h1 class="text-title">Customer Care Number Verification</h1>
+        
+        {% if result %}
+        <div class="result-header {% if result.risk_level == 'LOW' %}legitimate{% else %}suspicious{% endif %}">
+            <div class="status-text {% if result.risk_level == 'LOW' %}legitimate{% else %}suspicious{% endif %}">
+                {% if result.risk_level == 'LOW' %}
+                    <i class="fa-duotone fa-shield-check fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99;"></i>Legitimate Number
+                {% else %}
+                    <i class="fa-duotone fa-triangle-exclamation fa-lg" style="--fa-primary-color: #ff3b30; --fa-secondary-color: #ff6b6b;"></i>Suspicious Number
+                {% endif %}
+            </div>
+            <div class="company-details">
+                {{ result.company_name }} - {{ result.phone_number }}
+            </div>
+            <div class="recommendation">
+                {{ result.recommendation }}
+            </div>
+        </div>
+
+        <div class="section-title">Risk Assessment</div>
+        <div class="detail-subsection">
+            <ul class="risk-details-list">
+                <li>
+                    <span>Risk Score:</span>
+                    <span>{{ result.risk_score }}/100</span>
+                </li>
+                <li>
+                    <span>Risk Level:</span>
+                    <span>{{ result.risk_level }}</span>
+                </li>
+                <li>
+                    <span>Confidence:</span>
+                    <span>{{ result.confidence }}%</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section-title">Number Information</div>
+        <div class="detail-subsection">
+            <ul class="risk-details-list">
+                <li>
+                    <span>Number Type:</span>
+                    <span>{{ result.number_type }}</span>
+                </li>
+                <li>
+                    <span>Properties:</span>
+                    <span>
+                        {% if result.toll_free %}Toll Free{% endif %}
+                        {% if result.landline %}Landline{% endif %}
+                        {% if result.mobile %}Mobile{% endif %}
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        {% if result.enhanced_info %}
+        <div class="section-title">Enhanced Analysis</div>
+        {% if result.enhanced_info.basic_info %}
+        <div class="detail-subsection">
+            <div class="subsection-title">Basic Information</div>
+            <ul class="risk-details-list">
+                <li>
+                    <span>Valid:</span>
+                    <span>{{ result.enhanced_info.basic_info.valid }}</span>
+                </li>
+                <li>
+                    <span>Region:</span>
+                    <span>{{ result.enhanced_info.basic_info.region }}</span>
+                </li>
+                <li>
+                    <span>Carrier:</span>
+                    <span>{{ result.enhanced_info.basic_info.carrier }}</span>
+                </li>
+                <li>
+                    <span>Country Code:</span>
+                    <span>{{ result.enhanced_info.basic_info.country_code }}</span>
+                </li>
+                <li>
+                    <span>National Number:</span>
+                    <span>{{ result.enhanced_info.basic_info.national_number }}</span>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if result.enhanced_info.numverify_info and not result.enhanced_info.numverify_info.error %}
+        <div class="detail-subsection">
+            <div class="subsection-title">Number Verification Details</div>
+            <ul class="risk-details-list">
+                <li>
+                    <span>Local Format:</span>
+                    <span>{{ result.enhanced_info.numverify_info.local_format }}</span>
+                </li>
+                <li>
+                    <span>International Format:</span>
+                    <span>{{ result.enhanced_info.numverify_info.international_format }}</span>
+                </li>
+                <li>
+                    <span>Country:</span>
+                    <span>{{ result.enhanced_info.numverify_info.country_name }}</span>
+                </li>
+                <li>
+                    <span>Location:</span>
+                    <span>{{ result.enhanced_info.numverify_info.location }}</span>
+                </li>
+                <li>
+                    <span>Line Type:</span>
+                    <span>{{ result.enhanced_info.numverify_info.line_type|title }}</span>
+                </li>
+                <li>
+                    <span>Carrier:</span>
+                    <span>{{ result.enhanced_info.numverify_info.carrier if result.enhanced_info.numverify_info.carrier else 'Unknown' }}</span>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if result.risk_details %}
+        <div class="section-title">Risk Details</div>
+        <div class="detail-subsection">
+            <ul class="risk-details-list">
+                {% for detail in result.risk_details %}
+                    <li>{{ detail }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if result.found_numbers %}
+        <div class="section-title">Found Customer Care Numbers</div>
+        <div class="detail-subsection">
+            <div class="found-numbers-grid">
+                {% for number in result.found_numbers %}
+                    <div class="number-item {% if number == result.phone_number %}highlight{% endif %}">
+                        {{ number }}
+                        {% if number == result.phone_number %}
+                            <span class="match-indicator">⭐ Current Number</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="result-header suspicious">
+            <div class="status-text suspicious">
+                ⚠ Error Processing Request
+            </div>
+            <div class="recommendation">
+                An error occurred while processing your request. Please try again.
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center;">
+            <a href="/customer_care/check" class="btn-check-another">
+                <i class="fa-duotone fa-rotate fa-lg" style="--fa-primary-color: #000; --fa-secondary-color: #000;"></i>
+                Check Another Number
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,530 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glowPulse {
+        0% { box-shadow: 0 0 5px rgba(0, 255, 204, 0.2); }
+        50% { box-shadow: 0 0 20px rgba(0, 255, 204, 0.4); }
+        100% { box-shadow: 0 0 5px rgba(0, 255, 204, 0.2); }
+    }
+
+    @keyframes borderGlow {
+        0% { border-color: rgba(0, 255, 204, 0.5); }
+        50% { border-color: rgba(0, 255, 204, 1); }
+        100% { border-color: rgba(0, 255, 204, 0.5); }
+    }
+
+    .text-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .results-container {
+        width: 100%;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .card {
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .main-result-card {
+        text-align: center;
+        padding: 3rem 2rem;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 255, 204, 0.2);
+    }
+
+    .result-text {
+        font-size: 3rem;
+        font-weight: bold;
+        margin: 1rem 0;
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+    }
+
+    .lead {
+        color: #ffffff;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-title {
+        color: #00ffcc;
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 1.5rem 0;
+        background: linear-gradient(45deg, #00ffcc 0%, #00ff99 50%, #00ffcc 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient 3s linear infinite;
+    }
+
+    @keyframes gradient {
+        0% { background-position: 0% center; }
+        50% { background-position: 100% center; }
+        100% { background-position: 0% center; }
+    }
+
+    .alert {
+        background: rgba(255, 255, 255, 0.05);
+        border: none;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+    }
+
+    .alert-danger {
+        border: 2px solid #ff4444;
+        color: #ff4444;
+        animation: borderGlow 2s infinite;
+    }
+
+    .alert-success {
+        border: 2px solid #00ffcc;
+        color: #00ffcc;
+        animation: borderGlow 2s infinite;
+    }
+
+    .alert-warning {
+        border: 2px solid #ffbb33;
+        color: #ffbb33;
+    }
+
+    .badge {
+        padding: 0.5rem 1.2rem;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .accordion {
+        background: transparent;
+        margin-top: 2rem;
+    }
+
+    .accordion-item {
+        background: rgba(15, 15, 15, 0.95);
+        border: 2px solid rgba(0, 255, 204, 0.3);
+        border-radius: 15px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+
+    .accordion-button {
+        background: rgba(255, 255, 255, 0.05);
+        color: #00ffcc;
+        border-radius: 15px;
+        font-weight: 600;
+        padding: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: rgba(0, 255, 204, 0.1);
+        color: #00ffcc;
+    }
+
+    .accordion-button:hover {
+        background: rgba(0, 255, 204, 0.15);
+    }
+
+    .card-header {
+        background: rgba(0, 255, 204, 0.1);
+        border-bottom: 1px solid rgba(0, 255, 204, 0.3);
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        font-size: 1.4rem;
+        color: #00ffcc;
+    }
+
+    .card-header .fas {
+        font-size: 1.4rem;
+        margin-right: 0.8rem;
+        background: rgba(0, 255, 204, 0.1);
+        padding: 0.8rem;
+        border-radius: 12px;
+        color: #00ffcc;
+    }
+
+    .card-body {
+        color: #ccc;
+        padding: 1.5rem;
+        font-size: 1.15rem;
+        line-height: 1.6;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        border: none;
+        border-radius: 12px;
+        color: #0f0f0f;
+        font-weight: 600;
+        padding: 1.2rem 2.5rem;
+        font-size: 1.2rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
+    }
+
+    .btn-primary:active {
+        transform: translateY(-1px);
+    }
+
+    strong {
+        color: #00ffcc;
+        font-weight: 600;
+    }
+
+    code {
+        background: rgba(0, 255, 204, 0.1);
+        color: #00ffcc;
+        padding: 0.3rem 0.6rem;
+        border-radius: 5px;
+        font-family: 'Fira Code', monospace;
+        border: 1px solid rgba(0, 255, 204, 0.2);
+    }
+
+    .text-break {
+        word-break: break-all;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Custom styling for specific sections */
+    .feature-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.4);
+    }
+
+    .list-unstyled li {
+        padding: 0.5rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .list-unstyled li:hover {
+        transform: translateX(5px);
+        color: #fff;
+    }
+
+    .fa-3x {
+        margin-bottom: 1rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 2rem;
+        }
+
+        .text-container {
+            padding: 1rem;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+        }
+    }
+</style>
+
+<div class="text-container">
+    <div class="results-container">
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% elif url_scan %}
+        <!-- Main Result Card -->
+        <div class="card main-result-card">
+            {% if url_scan.is_phishing %}
+                <div class="result-section text-center">
+                    <div class="icon-wrapper mb-4">
+                        <i class="fas fa-triangle-exclamation fa-5x" style="color: #ff4444; text-shadow: 0 0 20px rgba(255, 68, 68, 0.4);"></i>
+                    </div>
+                    <h2 class="result-text" style="background: linear-gradient(45deg, #ff4444, #ff6666); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Suspicious URL Detected!</h2>
+                    <p class="lead" style="font-size: 1.4rem;">This URL shows characteristics of a potential phishing attempt.</p>
+                </div>
+            {% else %}
+                <div class="result-section text-center">
+                    <div class="icon-wrapper mb-4">
+                        <i class="fas fa-shield-halved fa-5x" style="color: #00ffcc; text-shadow: 0 0 20px rgba(0, 255, 204, 0.4);"></i>
+                    </div>
+                    <h2 class="result-text" style="background: linear-gradient(45deg, #00ffcc, #00ff99); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Legitimate URL</h2>
+                    <p class="lead" style="font-size: 1.4rem;">This URL appears to be safe.</p>
+                </div>
+            {% endif %}
+
+            <div class="url-details mt-4">
+                <p class="h5"><strong>Analyzed URL:</strong> <span class="text-break">{{ analyzed_url }}</span></p>
+                <p class="text-white-50">Scanned at: {{ url_scan.timestamp }}</p>
+            </div>
+
+            <button class="btn btn-primary btn-lg mt-4" type="button" data-bs-toggle="collapse" data-bs-target="#detailedReport" aria-expanded="false" aria-controls="detailedReport">
+                <i class="fas fa-chart-bar me-2"></i> View Detailed Report
+            </button>
+        </div>
+
+        <!-- Detailed Analysis Section -->
+        <div class="collapse mt-4" id="detailedReport">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center" style="color: #00ffcc;">Detailed Analysis Report</h3>
+                </div>
+                <div class="card-body">
+                    <div class="accordion-body">
+                        {% if url_scan.raw_details %}
+                            <!-- Basic URL Information -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-globe-americas"></i>Basic URL Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Domain:</strong> {{ url_scan.raw_details.domain }}</p>
+                                            <p><strong>URL Length:</strong> {{ url_scan.raw_details.url_length }} characters</p>
+                                            <p><strong>Uses Shortening Service:</strong> {{ "Yes" if url_scan.raw_details.shortening_service_match else "No" }}</p>
+                                            <p><strong>Has @ Symbol:</strong> {{ "Yes" if url_scan.raw_details.has_at_symbol else "No" }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Uses IP Address:</strong> {{ "Yes" if url_scan.raw_details.uses_ip_address else "No" }}</p>
+                                            <p><strong>Has Dash in Domain:</strong> {{ "Yes" if url_scan.raw_details.has_dash_in_domain else "No" }}</p>
+                                            <p><strong>Number of Subdomains:</strong> {{ url_scan.raw_details.subdomain_count }}</p>
+                                            <p><strong>Double Slash Position:</strong> {{ url_scan.raw_details.double_slash_redirecting_pos }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- WHOIS Information -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>WHOIS Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Domain Name:</strong> {{ url_scan.raw_details.whois.domain_name }}</p>
+                                            <p><strong>Creation Date:</strong> {{ url_scan.raw_details.whois.creation_date.strip('[]').split(',')[0].replace('datetime.datetime(', '').replace(')', '') }}</p>
+                                            <p><strong>Expiration Date:</strong> {{ url_scan.raw_details.whois.expiration_date.strip('[]').split(',')[0].replace('datetime.datetime(', '').replace(')', '') }}</p>
+                                            {% if url_scan.raw_details.abnormal_url_analysis.whois_registrant_org %}
+                                                <p><strong>Registrant Organization:</strong> {{ url_scan.raw_details.abnormal_url_analysis.whois_registrant_org }}</p>
+                                            {% endif %}
+                                            {% if url_scan.raw_details.abnormal_url_analysis.whois_registrant_email %}
+                                                <p><strong>Registrant Email:</strong> {{ url_scan.raw_details.abnormal_url_analysis.whois_registrant_email }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Updated Date:</strong> {{ url_scan.raw_details.whois.updated_date.strip('[]').split(',')[0].replace('datetime.datetime(', '').replace(')', '') }}</p>
+                                            <p><strong>Registrar:</strong> {{ url_scan.raw_details.whois.registrar }}</p>
+                                            {% if url_scan.raw_details.whois.status %}
+                                                <p><strong>Status:</strong></p>
+                                                <ul class="list-unstyled">
+                                                    {% for status in url_scan.raw_details.whois.status %}
+                                                        <li><i class="fas fa-check-circle text-success me-2"></i>{{ status.split(' ')[0].replace('(', '').replace(')', '') }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if url_scan.raw_details.ssl_cert %}
+                            <!-- SSL Certificate Information -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0"><i class="fas fa-lock me-2"></i>SSL Certificate Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Version:</strong> {{ url_scan.raw_details.ssl_cert.version }}</p>
+                                            <p><strong>Serial Number:</strong> {{ url_scan.raw_details.ssl_cert.serialNumber }}</p>
+                                            <p><strong>Valid From:</strong> {{ url_scan.raw_details.ssl_cert.notBefore }}</p>
+                                            <p><strong>Valid Until:</strong> {{ url_scan.raw_details.ssl_cert.notAfter }}</p>
+                                            {% if url_scan.raw_details.ssl_cert.subjectAltName %}
+                                                <p><strong>Alternative Names:</strong></p>
+                                                <ul class="list-unstyled">
+                                                    {% for san in url_scan.raw_details.ssl_cert.subjectAltName %}
+                                                        <li><i class="fas fa-globe text-primary me-2"></i>{{ san[1] }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                            {% if url_scan.raw_details.ssl_cert.OCSP %}
+                                                <p><strong>OCSP:</strong></p>
+                                                <ul class="list-unstyled">
+                                                    {% for ocsp in url_scan.raw_details.ssl_cert.OCSP %}
+                                                        <li><i class="fas fa-shield-alt text-info me-2"></i>{{ ocsp }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                            {% if url_scan.raw_details.ssl_cert.caIssuers %}
+                                                <p><strong>CA Issuers:</strong></p>
+                                                <ul class="list-unstyled">
+                                                    {% for issuer in url_scan.raw_details.ssl_cert.caIssuers %}
+                                                        <li><i class="fas fa-certificate text-warning me-2"></i>{{ issuer }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            {% if url_scan.raw_details.ssl_cert.subject %}
+                                                <p><strong>Subject:</strong></p>
+                                                <ul class="list-unstyled">
+                                                    {% for subject in url_scan.raw_details.ssl_cert.subject %}
+                                                        {% for item in subject %}
+                                                            <li><i class="fas fa-check text-success me-2"></i>{{ item[0] }}: {{ item[1] }}</li>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                            {% if url_scan.raw_details.ssl_cert.issuer %}
+                                                <p><strong>Issuer:</strong></p>
+                                                <ul class="list-unstyled">
+                                                    {% for issuer in url_scan.raw_details.ssl_cert.issuer %}
+                                                        {% for item in issuer %}
+                                                            <li><i class="fas fa-certificate text-info me-2"></i>{{ item[0] }}: {{ item[1] }}</li>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Security Features -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Security Features</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="p-3 border rounded">
+                                                <p><strong>Pop-up Window:</strong> {{ url_scan.raw_details.pop_up_window.split(',')[1] }}</p>
+                                                <p><strong>Right Click:</strong> {{ url_scan.raw_details.right_click_disabled.split(',')[1] }}</p>
+                                                <p><strong>Mouse Over:</strong> {{ url_scan.raw_details.on_mouseover.split(',')[1] }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-3 border rounded">
+                                                <p><strong>Favicon:</strong> {{ url_scan.raw_details.favicon.split(',')[1] }}</p>
+                                                <p><strong>iFrame:</strong> {{ url_scan.raw_details.iframe.split(',')[1] }}</p>
+                                                <p><strong>Server Form Handler:</strong> {{ "External/Suspicious" if url_scan.raw_details.sfh == "-1" else "Safe" }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-3 border rounded">
+                                                <p><strong>DNS Record:</strong> {{ "Yes" if url_scan.raw_details.dns_record else "No" }}</p>
+                                                <p><strong>Page Rank:</strong> {{ url_scan.raw_details.page_rank }}</p>
+                                                <p><strong>Tranco Rank:</strong> {{ url_scan.raw_details.tranco_rank }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- External Analysis -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-secondary text-white">
+                                    <h5 class="mb-0"><i class="fas fa-globe me-2"></i>External Analysis Results</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="alert {{ 'alert-success' if url_scan.raw_details.phishtank_reported == 'No' else 'alert-danger' }}">
+                                                <strong>PhishTank Status:</strong> {{ "Not Reported as Phishing" if url_scan.raw_details.phishtank_reported == 'No' else "Reported as Phishing" }}
+                                            </div>
+                                            <div class="alert {{ 'alert-success' if url_scan.raw_details.virustotal_report == 'Clean' else 'alert-danger' }}">
+                                                <strong>VirusTotal Status:</strong> {{ url_scan.raw_details.virustotal_report }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            {% if url_scan.raw_details.abnormal_url_analysis %}
+                                                <div class="alert {{ 'alert-success' if not url_scan.raw_details.abnormal_url_analysis.is_abnormal else 'alert-danger' }}">
+                                                    <h5>Abnormal URL Analysis</h5>
+                                                    <p><strong>Score:</strong> {{ url_scan.raw_details.abnormal_url_analysis.abnormal_score }}</p>
+                                                    {% if url_scan.raw_details.abnormal_url_analysis.details %}
+                                                        <p><strong>Organization Match:</strong> {{ "Yes" if url_scan.raw_details.abnormal_url_analysis.details.similarity_analysis.org_similarity else "No" }}</p>
+                                                        <p><strong>Uses Cheap Registrar:</strong> {{ "Yes" if url_scan.raw_details.abnormal_url_analysis.details.similarity_analysis.uses_cheap_registrar else "No" }}</p>
+                                                        <p><strong>Threshold:</strong> {{ url_scan.raw_details.abnormal_url_analysis.details.abnormal_threshold }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-4">
+            <a href="/url" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>Analyze Another URL
+            </a>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-circle me-2"></i>No analysis results available.
+        </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

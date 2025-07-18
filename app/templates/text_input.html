@@ -1,0 +1,395 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    .text-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 4rem;
+    }
+
+    .text-card {
+        font-family: 'Poppins', sans-serif;
+        padding: 4.5rem;
+        min-height: 500px;
+        background: rgba(15, 15, 15, 0.97);
+        border: 6px solid rgba(0, 255, 204, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 255, 204, 0.1);
+        backdrop-filter: blur(10px);
+    }
+
+    .text-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        background: linear-gradient(45deg, #00ffcc, #00ff99);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+    }
+
+    .text-description {
+        color: #ccc;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        line-height: 1.6;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-group {
+        margin-bottom: 2.5rem;
+        margin-top: 3rem;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        color: #00ffcc;
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .text-input {
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        min-height: 250px;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        resize: vertical;
+        transition: all 0.3s ease;
+        max-height: 500px;
+    }
+
+    .text-input:focus {
+        border-color: rgba(0, 255, 204, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        outline: none;
+    }
+
+    .text-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .char-counter {
+        text-align: right;
+        color: #999;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 15px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 1.15rem;
+        display: inline-flex;
+        align-items: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-analyze {
+        background: linear-gradient(45deg, #00ff99, #00ffcc);
+        color: #000;
+        padding: 1.2rem 2.5rem;
+        font-weight: 600;
+    }
+
+    .btn-clear {
+        background: rgba(102, 102, 102, 0.1);
+        border: 2px solid #666;
+        color: #666;
+    }
+
+    .btn-back {
+        background: rgba(0, 255, 204, 0.1);
+        border: 2px solid #00ffcc;
+        color: #00ffcc;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 153, 0.4);
+    }
+
+    .btn-clear:hover {
+        border-color: #999;
+        color: #999;
+        box-shadow: 0 5px 15px rgba(153, 153, 153, 0.3);
+    }
+
+    .btn-back:hover {
+        box-shadow: 0 5px 15px rgba(0, 255, 204, 0.4);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        padding-bottom: 1rem;
+        border-top: 1px solid rgba(0, 255, 204, 0.2);
+    }
+
+    .feature-item {
+        font-family: 'Poppins', sans-serif;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: all 0.3s ease;
+        gap: 1rem;
+    }
+
+    .feature-item:hover {
+        background: rgba(0, 255, 204, 0.1);
+        border-color: rgba(0, 255, 204, 0.5);
+        transform: translateY(-3px);
+    }
+
+    .feature-icon {
+        color: #00ffcc;
+        font-size: 2rem;
+        background: rgba(0, 255, 204, 0.1);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover .feature-icon {
+        background: rgba(0, 255, 204, 0.2);
+        transform: scale(1.1);
+    }
+
+    .feature-text {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+    }
+
+    .loading-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #00ffcc;
+    }
+
+    .loading-spinner {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 1rem;
+    }
+
+    .loading-spinner:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid #00ffcc;
+        border-color: #00ffcc transparent #00ffcc transparent;
+        animation: loading-spinner 1.2s linear infinite;
+    }
+
+    @keyframes loading-spinner {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .loading-subtext {
+        color: #999;
+        font-size: 1rem;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    @media (max-width: 768px) {
+        .text-card {
+            padding: 2rem;
+            margin: 1rem;
+        }
+
+        .text-title {
+            font-size: 2rem;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+
+        .features-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="text-container">
+    <div class="text-card">
+        <h1 class="text-title"><i class="fa-duotone fa-magnifying-glass-chart fa-sm" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Text Analysis</h1>
+        <p class="text-description">
+            <i class="fa-duotone fa-brain-circuit fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Analyze any text content for potential phishing, scams, or malicious intent using our advanced AI-powered detection system.
+        </p>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fa-duotone fa-network-wired"></i>
+                </div>
+                <div class="feature-text">Advanced Ensemble Methods</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fa-duotone fa-brain"></i>
+                </div>
+                <div class="feature-text">Psychological Analysis</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fa-duotone fa-message-code"></i>
+                </div>
+                <div class="feature-text">Linguistic Analysis</div>
+            </div>
+        </div>
+
+        <form method="POST" action="/text/analyze" id="textAnalysisForm">
+            <div class="form-group">
+                <label class="form-label" for="text_content"><i class="fa-duotone fa-pen-to-square fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.75rem;"></i>Enter Text to Analyze</label>
+                <textarea 
+                    id="text_content" 
+                    name="text_content" 
+                    class="text-input" 
+                    placeholder="Paste or type the text you want to analyze here... (e.g., suspicious emails, messages, social media posts, etc.)"
+                    required
+                    maxlength="5000"
+                ></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span> / 5000 characters
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-analyze">
+                    <i class="fa-duotone fa-radar fa-lg" style="--fa-primary-color: #000; --fa-secondary-color: #000; margin-right: 0.5rem;"></i>Analyze Text
+                </button>
+                <button type="button" class="btn btn-clear" onclick="clearText()">
+                    <i class="fa-duotone fa-trash-can fa-lg" style="--fa-primary-color: #666; --fa-secondary-color: #666; margin-right: 0.5rem;"></i>Clear
+                </button>
+                <a href="/services" class="btn btn-back">
+                    <i class="fa-duotone fa-arrow-left fa-lg" style="--fa-primary-color: #00ffcc; --fa-secondary-color: #00ff99; margin-right: 0.5rem;"></i>Back to Services
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="loading-overlay" id="loading">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Analyzing Text Content...</div>
+        <div class="loading-subtext">Please wait while our AI processes your input</div>
+    </div>
+</div>
+
+<script>
+    // Character counter
+    const textArea = document.getElementById('text_content');
+    const charCount = document.getElementById('charCount');
+    
+    textArea.addEventListener('input', function() {
+        const count = this.value.length;
+        charCount.textContent = count;
+        
+        // Change color based on character count
+        if (count > 4500) {
+            charCount.style.color = '#ff6b6b';
+        } else if (count > 4000) {
+            charCount.style.color = '#ffaa00';
+        } else {
+            charCount.style.color = '#999';
+        }
+    });
+
+    // Clear text function
+    function clearText() {
+        textArea.value = '';
+        charCount.textContent = '0';
+        charCount.style.color = '#999';
+        textArea.focus();
+    }
+
+    // Show loading on form submission
+    document.getElementById('textAnalysisForm').addEventListener('submit', function() {
+        document.getElementById('loading').style.display = 'block';
+        document.querySelector('.btn-analyze').disabled = true;
+    });
+
+    // Auto-resize textarea
+    textArea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.max(200, this.scrollHeight) + 'px';
+    });
+
+    // Focus on text area when page loads
+    window.addEventListener('load', function() {
+        textArea.focus();
+    });
+</script>
+
+{% endblock %}
