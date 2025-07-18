@@ -66,3 +66,7 @@ CipherStorm uses multiple AI models to detect and prevent digital fraud in real 
 
 See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for full API details.
 
+## Developer
+ Developed by Team CipherStorm
+ Dheeraj Kumar & Ankit Kumar
+
