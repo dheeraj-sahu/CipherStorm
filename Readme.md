@@ -35,19 +35,31 @@ CipherStorm uses multiple AI models to detect and prevent digital fraud in real 
 ## Using the Platform
 
 1. **Sign up and log in**
-   - ![Signup Screenshot](#)
-   - ![Login Screenshot](#)
+   - <img width="1900" height="865" alt="image" src="https://github.com/user-attachments/assets/f81dde17-0b29-4b48-9c83-5512c3748827" />
+   - <img width="1896" height="868" alt="image" src="https://github.com/user-attachments/assets/14ca2eb4-145a-4d55-840d-d5e9f912d7a8" />
 2. **Complete your profile**
-   - ![Profile Screenshot](#)
+   - <img width="1708" height="827" alt="image" src="https://github.com/user-attachments/assets/3275e863-37ad-4f37-ad2e-34ea7e4b8b76" />
+
 3. **Access the dashboard**
-   - ![Dashboard Screenshot](#)
+   - <img width="810" height="825" alt="image" src="https://github.com/user-attachments/assets/6276ba1a-4242-4ee9-8c77-db9dbb4a5f13" />
+
 4. **Use any service from the dashboard**
    - URL Phishing Detection
+   - <img width="1698" height="824" alt="image" src="https://github.com/user-attachments/assets/bcd06ae2-c16a-45ce-b11d-cc34fc32cb12" />
+
    - SMS Scam Detection
+   - <img width="1509" height="826" alt="image" src="https://github.com/user-attachments/assets/3123afc9-6908-4556-a86d-bf9c4e950d19" />
+
    - Vishing Detection
+   - <img width="1635" height="832" alt="image" src="https://github.com/user-attachments/assets/2075ac40-6f11-436e-a653-b8da814b32ac" />
+
    - Fake Customer Care Check
+   - <img width="1724" height="778" alt="image" src="https://github.com/user-attachments/assets/1f98ce40-580c-44d8-8c4c-7bcd8c1a0212" />
+
    - Transaction Fraud Analysis
-   - ![Services Page Screenshot](#)
+   - <img width="1487" height="821" alt="image" src="https://github.com/user-attachments/assets/5eda1501-d250-4341-9d18-d5be2df944ba" />
+
+ 
 5. **Get instant results and recommendations**
 
 ## Notes
