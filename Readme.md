@@ -66,10 +66,14 @@ CipherStorm uses multiple AI models to detect and prevent digital fraud in real 
 
 See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for full API details.
 
-## 📫 Contact
 
-Feel free to reach out to me:
+## 👨‍💻 Developed By
 
-- 📧 Email: [dheerajroot01@gmail.com](mailto:dheerajroot01@example.com)  
+**Dheeraj Kumar**  
+- 📧 Email: [dheerajroot01@gmail.com](mailto:dheerajroot01@gmail.com)  
 - 💼 LinkedIn: [Dheeraj Kumar](https://www.linkedin.com/in/dheerajsahu/)
+  
+**Ankit Kumar** 
+- 📧 Email: [ankitkr1801@gmail.com](mailto:ankitkr1801@gmail.com)  
+- 💼 LinkedIn: [Ankit Kumar](https://www.linkedin.com/in/ankit-kumar-824a122ab/)
 
