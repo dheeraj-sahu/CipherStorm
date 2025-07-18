@@ -1,5 +1,7 @@
 
 # CipherStorm: AI-Powered Fraud Detection Platform
+<img width="1897" height="865" alt="image" src="https://github.com/user-attachments/assets/13f0eedf-a6dd-4b9c-8b07-48405eaf6400" />
+
 
 ## How It Works
 
