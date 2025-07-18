@@ -1,12 +1,12 @@
 
-# CipherStorm: AI-Powered Fraud Detection Platform
+# CipherStorm: AI-Powered Multi Fraud Detection Platform
 <img width="1897" height="865" alt="image" src="https://github.com/user-attachments/assets/13f0eedf-a6dd-4b9c-8b07-48405eaf6400" />
 
 
 ## How It Works
 
 CipherStorm uses multiple AI models to detect and prevent digital fraud in real time. The platform covers:
-- URL phishing
+- URL Detection
 - SMS scam/spam
 - Vishing (voice phishing)
 - Fake customer care numbers
@@ -36,7 +36,6 @@ CipherStorm uses multiple AI models to detect and prevent digital fraud in real 
 
 1. **Sign up and log in**
    - <img width="1900" height="865" alt="image" src="https://github.com/user-attachments/assets/f81dde17-0b29-4b48-9c83-5512c3748827" />
-   - <img width="1896" height="868" alt="image" src="https://github.com/user-attachments/assets/14ca2eb4-145a-4d55-840d-d5e9f912d7a8" />
 2. **Complete your profile**
    - <img width="1708" height="827" alt="image" src="https://github.com/user-attachments/assets/3275e863-37ad-4f37-ad2e-34ea7e4b8b76" />
 
@@ -62,17 +61,8 @@ CipherStorm uses multiple AI models to detect and prevent digital fraud in real 
  
 5. **Get instant results and recommendations**
 
-## Notes
-
-- Use the test account for best results:
-  - Username: `ankitkr9911` | Password: `1234`
-  - (Has sample transactions for realistic testing)
-- Or create a new account and add transactions using the provided SQL script.
 
 ## API Docs
 
 See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for full API details.
 
-## Support
-
-For help, email support@cipherstorm.com or open an issue.
