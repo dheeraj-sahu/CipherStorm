@@ -1,5 +1,6 @@
 
 # CipherStorm: AI-Powered Multi Fraud Detection Platform
+CipherStorm is real-time, AI-driven platform that spots phishing links, smishing SMS, vishing calls, fake support numbers, and suspicious transactions - before they damage your customers or your brands. We combine machine learning and LLM for intelligent fraud detection, behavioral analysis to flag anomalies, a multi-layered architecture for high accuracy and continuous, real time monitoring to stop frauds in its tracks.
 <img width="1897" height="865" alt="image" src="https://github.com/user-attachments/assets/13f0eedf-a6dd-4b9c-8b07-48405eaf6400" />
 
 
